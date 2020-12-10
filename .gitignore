@@ -5,6 +5,7 @@
 *.tex.aux
 *.bbl
 *.blg
+*.brf
 *.glo
 *.idx
 *.lof
