@@ -1,5 +1,6 @@
 # Don't track these files
 
+# Latex files and packages 
 *.aux
 *.tex.aux
 *.bbl
@@ -13,4 +14,7 @@
 *.synctex.gz
 *.toc
 *.texput.log
+
+# Jupyter Notebook 
 *.cpython-38.pyc
+ipynb_checkpoints/
