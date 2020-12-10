@@ -1,1 +1,16 @@
+# Don't track these files
 
+*.aux
+*.tex.aux
+*.bbl
+*.blg
+*.glo
+*.idx
+*.lof
+*.log
+*.lot
+*.out
+*.synctex.gz
+*.toc
+*.texput.log
+*.cpython-38.pyc
