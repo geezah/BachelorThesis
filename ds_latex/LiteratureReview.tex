@@ -1,0 +1,35 @@
+\chapter{Literature Review}
+
+In this section, we present related literature. Since we're estimating arrival times by means of supervised learning algorithms, our problem is associated to following research areas: arrival time estimation and machine learning in DVR settings. 
+
+
+\section{Most related work}
+
+This work is mostly inspired by \cite{Hildebrandt2020_EAT}, who contributed a supervised offline and another supervised online-offline approach to predict arrival times in the Restaurant Meal Delivery problem setting, a dynamic pick up and delivery problem with uncertainty in travel times, processing times and order bundling  presented in \cite{UlmerRMDP}. In their offline approach, \cite{Hildebrandt2020_EAT} map state features to expected arrival times by means of a gradient boosting decision tree (GBDT) model. In their online-offline approach, they calculate the running average in an online simulation by training a supervised deep neural network that approximates the decisions a given routing policy would make for a given state.
+Because we operate in the identical problem setting and share a common goal in estimating arrival times fast and accurately via supervised learning, this paper will incorporate the GBDT model presented in \cite{Hildebrandt2020_EAT} in its empirical comparison. 
+
+\section{Arrival Time Estimation}
+
+\cite{UlmerBarrett2017_TWAP} estimate mean arrival times for a vehicle routing problem with stochastic requests (VRPSR) in home-attended delivery using value function approximation. 
+
+\cite{Zhu2020_OFCTE}
+
+   
+
+
+\cite{Zhang2013} formulate a SVRPTW with soft-time window constraints and stochastic travel and service times. Their objective function seeks to minimize vehicle employing costs, travel times and deviances w.r.t expected arrival times which are determined by the sum of expected service and travel times. The expected arrival times are then used to calculate a minimum on-time probability which every vehicle must fulfill for every visited customer.  
+
+\cite{Wu2004_SVR} apply support vector regression (SVR) for travel time prediction for single origin-destination routes in the context of intelligent transportation systems. Their experimental procedure contains of selecting a relatively less biased subset of the provided traffic data, and comparing the SVR to two analytical baseline methods for travel time prediction as benchmarks. They rely solely on temporal features.
+
+\cite{Chen2004_ANNKalman} who proposed an artifical neural network.
+
+\cite{Wang2018_WDR} propose an offline trained Wide Deep Recurrent Neural Network (WDRNN) model to predict vehicle travel times for single origin-destination routes by aggregating spatial, temporal, traffic, personalized and augmented features. In their offline comparison, they compared their approach to competing classical machine learning methods and route-based ETA. Two indications of their results are interesting in our viewpoint: First, all machine learning methods included in their experiment outperformed route-based ETA. Secondly their deep learning approach outperformed the competing classical machine learning methods. They also employ the WDRNN online for real-time service.
+
++++ Wird wahrscheinlich nicht genommen +++:
+\cite{Salari2020} propose a regression tree based and a  quantile regression forests model to forecast delivery time distributions in a B2C E-Commerce context. While they use temporal (i.e. \glqq order hour\grqq), processing (i.e. \glqq Number of waiting orders\grqq), and other order-related features (i.e. \glqq Total quantity\grqq), they do not incorporate spatial features and do not define their underlying problem model explicitly. In contrast to other arrival time prediction approaches, \cite{Salari2020} attempt to predict arrival time distributions rather than continuous values.  
+
+\section{Supervised learning}
+
+
+
+
