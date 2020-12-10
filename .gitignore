@@ -17,4 +17,4 @@
 
 # Jupyter Notebook 
 *.cpython-38.pyc
-ipynb_checkpoints/
+.ipynb_checkpoints/
