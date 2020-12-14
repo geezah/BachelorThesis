@@ -1,10 +1,20 @@
-Arrival time estimation, ML, in Vehicle Routing Setting
+Arrival time estimation, ML, in DVR Setting
+
 @unknown{Hildebrandt2020_EAT,
 	author = {Hildebrandt, Florentin and Ulmer, Marlin},
 	year = {2020},
 	month = {08},
 	pages = {},
 	title = {Supervised Learning for Arrival Time Estimations in Restaurant Meal Delivery}
+}
+@article{UlmerRMDP,
+	author = {Ulmer, Marlin and Thomas, Barrett and Campbell, Ann and Woyak, Nicholas},
+	year = {2020},
+	month = {08},
+	pages = {},
+	title = {The Restaurant Meal Delivery Problem: Dynamic Pick-Up and Delivery with Deadlines and Random Ready Times},
+	journal = {Transportation Science},
+	doi = {10.1287/trsc.2020.1000}
 }
 @article{UlmerBarrett2017_TWAP,
 	author = {Ulmer, Marlin and Thomas, Barrett},
@@ -14,7 +24,7 @@ Arrival time estimation, ML, in Vehicle Routing Setting
 	title = {Enough Waiting for the Cable Guy - Estimating Arrival Times for Service Vehicle Routing},
 	journal = {Transportation Science}
 }
-@inbook{Zhu2020_OFCTE,
+@inbook{Zhu2020_OFCTE_DL,
 	author = {Zhu, Lin and Yu, Wei and Zhou, Kairong and Wang, Xing and Feng, Wenxing and Wang, Pengyu and Chen, Ning and Lee, Pei},
 	title = {Order Fulfillment Cycle Time Estimation for On-Demand Food Delivery},
 	year = {2020},
@@ -23,7 +33,26 @@ Arrival time estimation, ML, in Vehicle Routing Setting
 	address = {New York, NY, USA},
 	url = {https://doi.org/10.1145/3394486.3403307}
 }
+@article{Liu2018_LM_PLM,
+	author = {Liu, Sheng and He, Long and Max Shen, Zuo-Jun},
+	title = {On-Time Last-Mile Delivery: Order Assignment with Travel-Time Predictors},
+	journal = {Management Science},
+	day = {15},
+	month = {05}
+	year = {2018},
+	doi = {10.1287/mnsc.2020.3741},
+	URL = {https://doi.org/10.1287/mnsc.2020.3741},
+	eprint = {https://doi.org/10.1287/mnsc.2020.3741}
+}
+
+
+
+
 Arrival Time Estimation with ML:
+
+
+SVR
+
 @ARTICLE{Wu2004_SVR,
 	author={ {Chun-Hsin Wu} and  {Jan-Ming Ho} and D. T. {Lee}},
 	journal={IEEE Transactions on Intelligent Transportation Systems}, 
@@ -34,6 +63,36 @@ Arrival Time Estimation with ML:
 	pages={276-281},
 	doi={10.1109/TITS.2004.837813}
 },
+@inproceedings{Masiero2011_SVR,
+	author = {Masiero, Leone Pereira and Casanova, Marco Antonio and de Carvalho, Marcelo Tilio M.},
+	title = {Travel Time Prediction Using Machine Learning},
+	year = {2011},
+	isbn = {9781450310345},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/2068984.2068991},  [Titel anhand dieser DOI in Citavi-Projekt übernehmen] 
+	doi = {10.1145/2068984.2068991},
+	booktitle = {Proceedings of the 4th ACM SIGSPATIAL International Workshop on Computational Transportation Science},
+	pages = {34–38},
+	numpages = {5},
+	keywords = {mobility data, travel time estimation, support vector machine},
+	location = {Chicago, Illinois},
+	series = {CTS '11}
+},
+@article{Yang2016 SVR,
+	author = {Yang, Ming and Chen, Chao and Wang, Lu and Yan, Xinxin and Zhou, Liping},
+	year = {2016},
+	month = {01},
+	pages = {205-217},
+	title = {Bus Arrival Time Prediction using Support Vector Machine with Genetic Algorithm},
+	volume = {26},
+	journal = {Neural Network World},
+	doi = {10.14311/NNW.2016.26.011}
+}
+
+Deep Learning
+
+
 @article{Chen2004_ANNKalman,
 	author = {Chen, Mei and Liu, Xiaobo and Xia, Jingxin and Chien, Steven I.},
 	title = {A Dynamic Bus-Arrival Time Prediction Model Based on APC Data},
@@ -45,8 +104,34 @@ Arrival Time Estimation with ML:
 	url = {https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-8667.2004.00363.x},
 	eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1467-8667.2004.00363.x},
 	year = {2004}
-},	
-@inproceedings{Wang2018_WDR,
+},
+@INPROCEEDINGS{Siripanpornchana2016_AnnWithDbnFS,	
+	author={C. {Siripanpornchana} and S. {Panichpapiboon} and P. {Chaovalit}},
+	booktitle={2016 IEEE Region 10 Conference (TENCON)}, 
+	title={Travel-time prediction with deep learning}, 
+	year={2016},
+	volume={},
+	number={},
+	pages={1859-1862},
+	doi={10.1109/TENCON.2016.7848343}
+}
+@misc{jindal2017unified,
+	title={A Unified Neural Network Approach for Estimating Travel Time and Distance for a Taxi Trip}, 
+	author={Ishan Jindal and Tony and Qin and Xuewen Chen and Matthew Nokleby and Jieping Ye},
+	year={2017},
+	eprint={1710.04350},
+	archivePrefix={arXiv},
+	primaryClass={stat.ML}
+}
+@INPROCEEDINGS{Goudarzi2018Comparison,  
+	author={F. {Goudarzi}},  
+	booktitle={2018 IEEE 20th International Conference on High Performance Computing and Communications; IEEE 16th International Conference on Smart City; IEEE 4th International Conference on Data Science and Systems (HPCC/SmartCity/DSS)},   
+	title={Travel Time Prediction: Comparison of Machine Learning Algorithms in a Case Study},   year={2018},
+	volume={},  
+	number={},  
+	pages={1404-1407},  doi={10.1109/HPCC/SmartCity/DSS.2018.00232}
+}
+@inproceedings{Wang2018_WDR_DL,
 	author = {Wang, Zheng and Fu, Kun and Ye, Jieping},
 	title = {Learning to Estimate the Travel Time},
 	year = {2018},
@@ -55,7 +140,62 @@ Arrival Time Estimation with ML:
 	address = {New York, NY, USA},
 	url = {https://doi.org/10.1145/3219819.3219900},  [Titel anhand dieser DOI in Citavi-Projekt übernehmen] 
 	doi = {10.1145/3219819.3219900}
+},
+
+GBDT 
+
+@inproceedings{KaggleTaxiGBDT,
+	author = {Hoch, Thomas},
+	year = {2015},
+	month = {09},
+	pages = {},
+	title = {An Ensemble Learning Approach for the Kaggle Taxi Travel Time Prediction Challenge}
 }
+@article{Zhang2016_GBDT, 
+	title={Urban Link Travel Time Prediction Based on a Gradient Boosting Method Considering Spatiotemporal Correlations}, 
+	volume={5}, 
+	ISSN={2220-9964}, url={http://dx.doi.org/10.3390/ijgi5110201},
+	DOI={10.3390/ijgi5110201}, 
+	number={11}, 
+	journal={ISPRS International Journal of Geo-Information}, 
+	publisher={MDPI AG}, 
+	author={Zhang, Faming and Zhu, Xinyan and Hu, Tao and Guo, Wei and Chen, Chen and Liu, Lingjia}, year={2016}, 
+	month={11}, 
+	pages={201}
+}
+
+@INPROCEEDINGS{Huang2018_GBDT,
+	author={L. {Huang} and L. {Xu}},
+	booktitle={2018 Eighth International Conference on Instrumentation   Measurement, Computer, Communication and Control (IMCCC)}, 
+	title={Research on Taxi Travel Time Prediction Based on GBDT Machine Learning Method}, 
+	year={2018},
+	volume={},
+	number={},
+	pages={718-722},	
+	doi={10.1109/IMCCC.2018.00155}
+}
+@ARTICLE{Cheng2019_GBDT,
+	author={J. {Cheng} and G. {Li} and X. {Chen}},
+	journal={IEEE Access}, 
+	title={Research on Travel Time Prediction Model of Freeway Based on Gradient Boosting Decision Tree}, 
+	year={2019},
+	volume={7},
+	number={},
+	pages={7466-7480},
+	doi={10.1109/ACCESS.2018.2886549}}
+@misc{huang2020travel_GBDT,
+	title={Travel Time Prediction using Tree-Based Ensembles}, 
+	author={He Huang and Martin Pouls and Anne Meyer and Markus Pauly},
+	year={2020},
+	eprint={2005.13818},
+	archivePrefix={arXiv},
+	primaryClass={stat.ML}
+}
+
+
+
+
+Misc:
 @Article{Salari2020,
 	author= { Salari, Nooshin and  Liu, Sheng and Shen, Zuo-Jun Max},
 	title = {Real-Time Delivery Time Forecasting and Promising in Online Retailing: When Will Your Package Arrive?},
@@ -77,20 +217,6 @@ Arrival Time Estimation with ML:
 	eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/net.21628},
 	year = {2016}
 }
-@book{Bishop,
-	author = {Bishop, Christopher M.},
-	title = {Pattern Recognition and Machine Learning (Information Science and Statistics)},
-	year = {2006},
-	isbn = {0387310738},
-	publisher = {Springer-Verlag},
-	address = {Berlin, Heidelberg}
-}
-@unpublished{SLFoundations,
-	author = {Wolf, Michael M.},
-	title = {Mathematical Foundations of supervised learning},
-	year = {2020},
-	url = {https://www-m5.ma.tum.de/foswiki/pub/M5/Allgemeines/MA4801_2020S/ML_notes_main.pdf},		
-}
 
 Arrival Time estimation from problem pov:
 @article{Li2010,
@@ -105,16 +231,30 @@ Arrival Time estimation from problem pov:
 	url = "http://www.sciencedirect.com/science/article/pii/S092552731000023X",
 	author = "Xiangyong Li and Peng Tian and Stephen C.H. Leung",
 }
-@article{Zhang2013,
-	author = {Zhang, J. and Lam, William and Chen, Bi Yu},
-	year = {2013},
-	month = {05},
-	pages = {},
-	title = {A Stochastic Vehicle Routing Problem with Travel Time Uncertainty: Trade-Off Between Cost and Customer Service},
-	volume = {In press},
-	journal = {Networks and Spatial Economics},
-	doi = {10.1007/s11067-013-9190-x}
+@article{Zhang2013,
+	author = {Zhang, J. and Lam, William and Chen, Bi Yu},
+	year = {2013},
+	month = {05},
+	pages = {},
+	title = {A Stochastic Vehicle Routing Problem with Travel Time Uncertainty: Trade-Off Between Cost and Customer Service},
+	volume = {In press},
+	journal = {Networks and Spatial Economics},
+	doi = {10.1007/s11067-013-9190-x}
 }
-
+Solution chapter:
+@book{Bishop,
+	author = {Bishop, Christopher M.},
+	title = {Pattern Recognition and Machine Learning (Information Science and Statistics)},
+	year = {2006},
+	isbn = {0387310738},
+	publisher = {Springer-Verlag},
+	address = {Berlin, Heidelberg}
+}
+@unpublished{SLFoundations,
+	author = {Wolf, Michael M.},
+	title = {Mathematical Foundations of supervised learning},
+	year = {2020},
+	url = {https://www-m5.ma.tum.de/foswiki/pub/M5/Allgemeines/MA4801_2020S/ML_notes_main.pdf},		
+}
 
 	
