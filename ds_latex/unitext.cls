@@ -295,7 +295,7 @@
   \let\datum\@date
   \hypersetup{%
     pdftitle={\@title},
-    pdfauthor={\@author},
+    pdf={\@author},
     pdfsubject={\@subject},
     pdfkeywords={\@keywords},
     pdfcreator={\LaTeX{} with local class \dq{}unitext\dq{}
