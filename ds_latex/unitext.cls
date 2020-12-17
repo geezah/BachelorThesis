@@ -60,7 +60,7 @@
     \selectlanguage{USenglish}
   }
 }
-\DeclareOption{USenglish}{%
+\DeclareOption{german}{%
   \AtEndOfClass{%
     \RequirePackage[right]{eurosym}
   }
@@ -120,8 +120,7 @@
 \RequirePackage[thinspace,thinqspace,squaren,textstyle]{SIunits}
 \RequirePackage{ngerman}
 \RequirePackage[natbibapa]{apacite}
-
-\RequirePackage[ruled,vlined]{algorithm2e}
+\RequirePackage{tabularx}
 
 \renewcommand*{\partpagestyle}{empty}
 \renewcommand*{\chapterformat}{\chapappifchapterprefix{\ }\thechapter\enskip}
@@ -295,7 +294,7 @@
   \let\datum\@date
   \hypersetup{%
     pdftitle={\@title},
-    pdf={\@author},
+    pdfauthor={\@author},
     pdfsubject={\@subject},
     pdfkeywords={\@keywords},
     pdfcreator={\LaTeX{} with local class \dq{}unitext\dq{}

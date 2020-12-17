@@ -19,3 +19,6 @@
 # Jupyter Notebook 
 *.cpython-38.pyc
 .ipynb_checkpoints/
+
+# Misc
+*.~lock.*
