@@ -23,11 +23,22 @@ Other than \cite{Hildebrandt2020_EAT}, research on arrival time estimation via s
 
 With this section, we broaden the scope from arrival time estimations via supervised learning for dynamic pick-up and delivery problems to arrival time estimations via supervised learning for vehicle routes in general.
 Tab. 1 classifies the literature on arrival time estimation for vehicle routes with regards to the problem setting and the solution approach. 
-By \textit{Route type}, the table identifies if arrival times are estimated for either single origin-destination pairs or sequences of them. 
-By \textit{Uncertainties}, the table refers to uncertain elements in the underlying problem settings. Uncertainty in request indicates that customer requests are not certainly known at the start of the problem and arrive dynamically. Uncertainty in travel and service times expresses itself through uncertain weather conditions, traffic congestion and individual challenges when serving customers (e.g. parking or waiting times). Uncertainty in processing occurs when  
+By \textit{Route type}, the table distinguishes betweeen arrival times estimation research that has been applied to trips consisting of either single origin-destination pairs (referred to as \textit{OD} in the table), or sequences of them (referred to as \textit{trips} in the table).
+By \textit{Uncertainties}, the table refers to uncertain elements in the underlying problem settings. Uncertainty in request indicates that customer requests are not certainly known at the start of the problem and arrive dynamically over time. Uncertainty in travel and service times expresses itself through uncertain weather conditions, traffic congestion and individual challenges when serving customers (e.g. parking or waiting times). Uncertainty in processing occurs when two stochastic processes are synchronized (e.g. the synchronisation of bus ride and bus boarding). For the solution approach, we classify the literature based on features and supervised learning algorithms used for travel time prediction. The \textit{features} column distincts between temporal, spatial, routing and processing features.
+
+Temporal features description
+
+Spatial features description
+
+Routing features description
+
+Processing features description
+
+A noticeable amount of research on arrival time predicton for vehicle trips via supervised learning has been done in the field of bus arrival time prediction. 
+
+\cite{Chen2004_ANNKalman}
 
 For single origin-destination problems, significant amount of work where travel times are estimated via supervised learning has been done for intelligent transportation systems. 
-
 To predict travel times on freeways for different short-term forecasting horizons, \cite{Vanajakshi2007} use support vector regression (SVR) based on estimated route travel times from prior research and conclude that SVR and ANNs perform comparably good and outperform prediction methods which are based on historical average values or most recently obtained travel time information. 
 \cite{Siripanpornchana2016_AnnWithDbnFS} propose a deep learning architecture consisting of a deep belief network and a sigmoid regression layer. Former learns features in an unsupervised fashion based on historical route travel times as inputs, latter then estimates travel times based on these learned features. \cite{Cheng2019_GBDT} use a GBDT model based on manually selected travel time features and traffic state related variables. In their study, GBDTs outperform feedforward neural networks and support vector machines.
 
