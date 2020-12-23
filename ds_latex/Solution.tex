@@ -9,29 +9,26 @@ Section 4.4 defines the process by which we evaluate the algorithms in order to 
 
 \section{Motivation}
 
-We motivate this paper by answering the following questions:
-Why is machine learning useful and widely-common for esitmation tasks? 
-Which technical problems are encountered when using other approaches? 
-Which machine learning algorithms are appropriate for our problem? Why bother comparing them? 
+
 
 \section{Algorithms}
-This section gives a short introduction to the conceptual framework of supervised learning and then examines the algorithms included in our comparison. For further research, the reader is refered to \cite{Bishop} and \cite{SLFoundations}.
+This section gives a short introduction to the conceptual framework of supervised learning and then examines the algorithms included in our comparison. For further research, the reader is referred to \cite{Bishop} and \cite{SLFoundations}.
 \newline
 \newline
 Supervised learning models receive a finite sequence 
-$S = \{(x, y) | x \in X, y \in Y\}$ of length $N \in \mathbb{N}$ as inputs where $x_i \in X$ with $i \in N$ is an \textbf{observation} and $y_i \in Y$ its corresponding \textbf{target}. They aim for the approximation of an \textbf{hypothesis} $h: X \to Y$ that describes the underlying patterns of $X$ accurately w.r.t. a \textbf{loss function} $L: Y \times Y \to \mathbb{R}$ and predicts a target of a given observation. Loss functions represent the deviance of $h(x_i)$ for a given $x_i$ and its correspondent target $y_i$ by which we can measure how accurate the predictions of a model are. An optimal approximation function $h_{opt}$ is obtained by finding the minimal loss. $h$ is then used to predict any $y_i \in Y$ for a corresponding $x_i \in X$.  
+$S = \{(x, y) | x \in X, y \in Y\}$ of length $N \in \mathbb{N}$ as inputs where $x_i \in X$ with $i \in N$ is an \textbf{observation} and $y_i \in Y$ its corresponding \textbf{target}. They aim for the approximation of an \textbf{hypothesis} $h: X \to Y$ that describes the underlying patterns of $X$ accurately w.r.t. a \textbf{loss function} $L: Y \times Y \to \mathbb{R}$ and predicts a target of a given observation. Loss functions represent the difference of $h(x_i)$ from $y_i$ by which we can measure how accurate the predictions of a model are. An optimal approximation function $h_{opt}$ is obtained by finding the minimal loss, i.e. the minimal difference between $h(X)$ from $Y$. $h_{opt}$ is then used to predict any $y_i$ based on $x_i$.  
 \newline
-Predictions can generally be made for either a \textbf{regression} or \textbf{classification} problem, which differ in the nature of their target variables. While regression is used to predict continuous targets $Y$, classification finds its use in the prediction of discrete $Y$. In machine learning terms, the arrival time estimation problems classifies as a regression task since we are estimating continuous time points. 
+Predictions can generally be made for either a \textbf{regression} or \textbf{classification} problem, which differ in the nature of their target variables. While regression is used to predict continuous targets, classification finds its use in the prediction of discrete targets. The arrival time estimation problem is a regression task since we are estimating continuous values, which are the arrival times. 
 Although various supervised learning models use different mathematical procedures to predict targets, all of them follow the principle of induction, meaning that general rules are inductively inferred from the  observations. This is also called \textbf{generalization}.  
-In order for a model to generalize the data properly, two things have to be avoided: \textbf{Underfitting} and \textbf{Overfitting}.
+In order for a model to generalize the data properly, two things have to be avoided: \textbf{Underfitting} and \textbf{Overfitting}. 
 
 
-\subsection{GBDT}
 
-\subsection{Random Forest}
-- Example
-- Formal Definition
-\subsection{Neural Network}
+\subsection{Linear Models}
+
+\subsection{Ensemble Learning}
+
+\subsection{Neural Networks}
 - Example
 - Formal Definition
 
@@ -49,23 +46,3 @@ In order for a model to generalize the data properly, two things have to be avoi
 --> Anzahl der Trainingsdaten
 --> Andere Features
 - Time for performance
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
