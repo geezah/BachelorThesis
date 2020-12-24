@@ -16,11 +16,14 @@ This section gives a short introduction to the conceptual framework of supervise
 \newline
 \newline
 Supervised learning models receive a finite sequence 
-$S = \{(x, y) | x \in X, y \in Y\}$ of length $N \in \mathbb{N}$ as inputs where $x_i \in X$ with $i \in N$ is an \textbf{observation} and $y_i \in Y$ its corresponding \textbf{target}. They aim for the approximation of an \textbf{hypothesis} $h: X \to Y$ that describes the underlying patterns of $X$ accurately w.r.t. a \textbf{loss function} $L: Y \times Y \to \mathbb{R}$ and predicts a target of a given observation. Loss functions represent the difference of $h(x_i)$ from $y_i$ by which we can measure how accurate the predictions of a model are. An optimal approximation function $h_{opt}$ is obtained by finding the minimal loss, i.e. the minimal difference between $h(X)$ from $Y$. $h_{opt}$ is then used to predict any $y_i$ based on $x_i$.  
+$S = \{(x_1, y) | x \in X, y \in Y\}$ of length $N \in \mathbb{N}$ as inputs where $x_i \in X$ with $i \in N$ is a \textbf{feature} (also called input or observation) and $y_i \in Y$ its corresponding \textbf{label} (also called output or target). 
+
+They aim to fit a function $f: X \to Y$ to the underlying patterns of $X$ in an iterative fashion. 
+The accuracy of a function is measured with \textbf{loss function} $L: Y \times Y \to \mathbb{R}$. $x_i$ that is passed to $h(x_i)$ from $y_i$ by which we can measure how accurate the predictions of a model are. $h_{opt}$ is then used to predict any target $h_{opt}(x_i)$ based on $x_i$.  
 \newline
 Predictions can generally be made for either a \textbf{regression} or \textbf{classification} problem, which differ in the nature of their target variables. While regression is used to predict continuous targets, classification finds its use in the prediction of discrete targets. The arrival time estimation problem is a regression task since we are estimating continuous values, which are the arrival times. 
-Although various supervised learning models use different mathematical procedures to predict targets, all of them follow the principle of induction, meaning that general rules are inductively inferred from the  observations. This is also called \textbf{generalization}.  
-In order for a model to generalize the data properly, two things have to be avoided: \textbf{Underfitting} and \textbf{Overfitting}. 
+Although various supervised learning models use different mathematical procedures to predict targets, all of them follow the principle of induction, meaning that general rules are inductively inferred from the observations. This is also called \textbf{generalization}.  
+In order for a model to generalize the data properly, two things have to be avoided: \textbf{Underfitting} and \textbf{Overfitting}.
 
 
 
@@ -28,6 +31,8 @@ In order for a model to generalize the data properly, two things have to be avoi
 
 \subsection{Ensemble Learning}
 
+Gradient Boosting
+Random Forest
 \subsection{Neural Networks}
 - Example
 - Formal Definition
@@ -36,13 +41,14 @@ In order for a model to generalize the data properly, two things have to be avoi
 
 - Raw Data 
 - Manual feature selection
+- 
 - Feature learning via deep autoencoder
 
 \section{Evaluation} 
-- Use MSE (and maybe more criteria) etc. to derive infos about accuracy
+- Use MSE, MAE, MAPE etc. to derive infos about accuracy
 - Hyperparameter sensitivity analysis (Random Search) for robustness
 - Variations in data set for robustness
 --> Noise einführen 
 --> Anzahl der Trainingsdaten
 --> Andere Features
-- Time for performance
+--> Runtime
