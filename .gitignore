@@ -20,5 +20,9 @@
 *.cpython-38.pyc
 .ipynb_checkpoints/
 
+#Folders
+venv/
+
 # Misc
 *.~lock.*
+
