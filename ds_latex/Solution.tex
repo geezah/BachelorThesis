@@ -1,6 +1,6 @@
 
 
-\chapter{Solution Approach}
+\chapter{Methodology}
 This chapter presents the solution approach.
 Section 4.1 motivates our problem. 
 Section 4.2 discusses the selected features.
@@ -11,34 +11,43 @@ Section 4.4 defines the process by which we evaluate the algorithms in order to 
 
 \section{Algorithms}
 This section gives a short introduction to the conceptual framework of supervised learning and then examines the algorithms included in our comparison. For further research, the interested reader is referred to \cite{Bishop} and \cite{SLFoundations}.
-
 Supervised learning models receive a finite sequence 
 $S = \{(x_1, y_1), (x_2,y_2), (x_3,y_3)\}$ from pairs of $X \times Y$ as inputs where $x \in X$ is a \textbf{feature} (also called input or observation) and $y \in Y$ is its corresponding \textbf{label} (also called output or target) and use a function $f : X \to Y$ that predicts any $y \in Y$ for an observation $x \in X$
-
-
 The accuracy of a function is measured with \textbf{loss function} $L: Y \times Y \to \mathbb{R}$. $x_i$ that is passed to $h(x_i)$ from $y_i$ by which we can measure how accurate the predictions of a model are. $h_{opt}$ is then used to predict any target $h_{opt}(x_i)$ based on $x_i$.  
 
 Predictions can generally be made for either a \textbf{regression} or \textbf{classification} problem, which differ in the nature of their target variables. While regression is used to predict continuous targets, classification finds its use in the prediction of discrete targets. The arrival time estimation problem is a regression task since we are estimating (continuous) arrival times.
 Although various supervised learning models use different mathematical procedures to predict targets, all of them follow the principle of induction, meaning that general rules are inductively inferred from the observations. This is also called \textbf{generalization}.  
 In order for a model to generalize the data properly, two things have to be avoided: \textbf{Underfitting} and \textbf{Overfitting}.
 
-
+\newpage
 \subsection{Linear Models}
+Linear regression models assume a linear relationship between dependent and independent variables, i.e. inputs and outputs. They aim to fit a linear equation of the form 
+\begin{equation}
+\hat Y(\mathbf{w},\mathbf{X}) = b + \sum_{i=1}^N w_1x_1 + w_2x_2 + \dots + w_px_p	
+\end{equation}
 
-\begin{equation*}
-	\hat y(x,w) = \sum_{i=0}^N w_ix_i
-\end{equation*}
+to observed data, where $b \in \mathbb{R}$ is the intercept, $\{w_1, \dots, w_p\}$ are the weights and $\mathbf{X}$ is a matrix of dimensionality $p \times N$, i.e a matrix consisting of p features and N samples. Matrix notation is usually used for simplification purposes: 
+\begin{equation}
+	\hat Y(\mathbf{w},\mathbf{X}) = b + \mathbf{w^T}\mathbf{X}
+\end{equation}
+
+%\begin{equation*}
+%	\hat y(x,w) = \sum_{i=0}^N w_ix_i
+%\end{equation*}
 \subsection{Ensemble Learning}
 
+Ensemble learning techniques use 
 \subsection{Neural Networks}
 - Example
 - Formal Definition
 
 \section{Feature Selection}
 
+As shown in \autoref{chap:review}, researchers used different feature selection methods. A majority of the presented papers crafted their features manually relying on their domain expertise, whereas others (e.g \cite{Siripanpornchana2016_AnnWithDbnFS} and \cite{Huang2018_GBDT}) used representation learning techniques.
+
+
 - Raw Data 
 - Manual feature selection
-- 
 - Feature learning via deep autoencoder
 
 \section{Evaluation} 
