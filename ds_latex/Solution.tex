@@ -1,5 +1,3 @@
-
-
 \chapter{Methodology}
 This chapter presents the solution approach.
 Section 4.1 motivates our problem. 
@@ -7,19 +5,18 @@ Section 4.2 discusses the selected features.
 Section 4.3 explains the algorithms considered in the comparison in detail.
 Section 4.4 defines the process by which we evaluate the algorithms in order to assess the quality of each algorithm.
 
-\section{Motivation}
 
 \section{Algorithms}
-This section gives a short introduction to the conceptual framework of supervised learning and then examines the algorithms included in our comparison. For further research, the interested reader is referred to \cite{Bishop} and \cite{SLFoundations}.
-Supervised learning models receive a finite sequence 
-$S = \{(x_1, y_1), (x_2,y_2), (x_3,y_3)\}$ from pairs of $X \times Y$ as inputs where $x \in X$ is a \textbf{feature} (also called input or observation) and $y \in Y$ is its corresponding \textbf{label} (also called output or target) and use a function $f : X \to Y$ that predicts any $y \in Y$ for an observation $x \in X$
-The accuracy of a function is measured with \textbf{loss function} $L: Y \times Y \to \mathbb{R}$. $x_i$ that is passed to $h(x_i)$ from $y_i$ by which we can measure how accurate the predictions of a model are. $h_{opt}$ is then used to predict any target $h_{opt}(x_i)$ based on $x_i$.  
-
+This section gives a short introduction to the conceptual framework of machine learning and then examines the algorithms included in our comparison. For further research, the interested reader is referred to \cite{Bishop} and \cite{SLFoundations}.
+\newline
+\newline
+Hier Funktionsweise von Supervised learning algorithms.
+\newline
+\newline
 Predictions can generally be made for either a \textbf{regression} or \textbf{classification} problem, which differ in the nature of their target variables. While regression is used to predict continuous targets, classification finds its use in the prediction of discrete targets. The arrival time estimation problem is a regression task since we are estimating (continuous) arrival times.
 Although various supervised learning models use different mathematical procedures to predict targets, all of them follow the principle of induction, meaning that general rules are inductively inferred from the observations. This is also called \textbf{generalization}.  
-In order for a model to generalize the data properly, two things have to be avoided: \textbf{Underfitting} and \textbf{Overfitting}.
+In order for a model to generalize the data properly, two things have to be avoided: \textbf{Underfitting} and \textbf{Overfitting}. Indicators for a underfitted model are poor predictions on both the training and test data, whereas a overfitted model does very well on the training data, but poorly on test data. Technically speaking, they occur when a model has either too few or many free available respectively to describe the underlying mapping of given training data. 
 
-\newpage
 \subsection{Linear Models}
 Linear regression models assume a linear relationship between dependent and independent variables, i.e. inputs and outputs. They aim to fit a linear equation of the form 
 \begin{equation}
@@ -36,14 +33,44 @@ to observed data, where $b \in \mathbb{R}$ is the intercept, $\{w_1, \dots, w_p\
 %\end{equation*}
 \subsection{Ensemble Learning}
 
-Ensemble learning techniques use 
+To show how the presented algorithms work, we will introduce them formally.
+
+The first step in GBDT is to initialize a model by taking the derivate of the loss function with a known target $ y_i $ and an unknown target prediction $ \gamma $ that is constant for all corresponding $ y_i $.
+\begin{equation}
+F_{0}(x) =  \argmin_{\gamma} \sum_{i=1}^n L(y_i,\gamma) \label{gbdt_step1}
+\end{equation}
+Given the initial model $ F_0(x) $ respectively the former learner $ F_{m-1}(x) $, M regression trees can now be build sequentially as shown in the following. 
+The first step computes pseudo-residuals $ r_{im} $ between the prediction value of the former learner for the i-th observation $ F_{m-1}(x) $ and the actual i-th target for the m-th tree $ y_i $by deriving the loss function w.r.t to $ F_{m-1}(x) $: 
+\begin{equation}
+	r_{im}\ = - \bigg[\dfrac{\delta L(y_i, F(x_i))}{\delta F(x_i)}\bigg]_{F(x) = F_{m-1}(x)}
+\end{equation} 
+for every i-th example.
+
+In the second step, the algorithm fits a regression tree to every $ r_{im} $ and creates disjoint regions (in decision tree terminology $\widehat{=}$ \glqq leaves\grqq) $ R_{jm} $ for $j = 1, ..., J_m$. 
+
+In the third step, we compute: 
+\begin{equation}
+	\gamma_{jm} = \argmin_{\gamma} \sum_{x_i \in R_{ij}} L(y_i, F_{m-1}(x_i) + \gamma)
+\end{equation}
+for every terminal region j in the m-th tree. 
+Given this, we now update the former weak learner with the new one:
+\begin{equation}
+	F_m(x) = F_{m-1}(x) + \alpha \sum_{j=1}^{J_m} \gamma_{m}I(x \in R_{jm})
+\end{equation}s
+where $ \alpha $ is the learning rate.
+
+
+
+ 
+
+
 \subsection{Neural Networks}
 - Example
 - Formal Definition
 
 \section{Feature Selection}
 
-As shown in \autoref{chap:review}, researchers used different feature selection methods. A majority of the presented papers crafted their features manually relying on their domain expertise, whereas others (e.g \cite{Siripanpornchana2016_AnnWithDbnFS} and \cite{Huang2018_GBDT}) used representation learning techniques.
+As shown, researchers used different feature selection methods. A majority of the presented papers crafted their features manually relying on their domain expertise, whereas others (e.g \cite{Siripanpornchana2016_AnnWithDbnFS} and \cite{Huang2018_GBDT}) used representation learning techniques.
 
 
 - Raw Data 
@@ -54,7 +81,13 @@ As shown in \autoref{chap:review}, researchers used different feature selection 
 - Use MSE, MAE, MAPE etc. to derive infos about accuracy
 - Hyperparameter sensitivity analysis (Random Search) for robustness
 - Variations in data set for robustness
---> Noise einführen 
---> Anzahl der Trainingsdaten
---> Andere Features
---> Runtime
+Noise einführen 
+--> Wie reagiert Algorithmus auf Noise
+Anzahl der Trainingsdaten 
+--> Wieviele Samples bis Konvergenz?
+Feature Selection
+--> Welches Set optimiert bzgl. Runtime und Accuracy
+Feature Complexity
+--> Was passiert, wenn der Datensatz komplexer wird? (Veränderungen von Elementen aus Problemstellung wie z.B. Autos, Kunden, Restaurants)
+
+Runtime
