@@ -10,7 +10,7 @@ Section 4.4 defines the process by which we evaluate the algorithms in order to 
 This section gives a short introduction to the conceptual framework of machine learning and then examines the algorithms included in our comparison. For further research, the interested reader is referred to \cite{Bishop} and \cite{SLFoundations}.
 \newline
 \newline
-Hier Funktionsweise von Supervised learning algorithms.
+Supervised learning algorithms 
 \newline
 \newline
 Predictions can generally be made for either a \textbf{regression} or \textbf{classification} problem, which differ in the nature of their target variables. While regression is used to predict continuous targets, classification finds its use in the prediction of discrete targets. The arrival time estimation problem is a regression task since we are estimating (continuous) arrival times.
@@ -31,9 +31,14 @@ to observed data, where $b \in \mathbb{R}$ is the intercept, $\{w_1, \dots, w_p\
 %\begin{equation*}
 %	\hat y(x,w) = \sum_{i=0}^N w_ix_i
 %\end{equation*}
-\subsection{Ensemble Learning}
+\subsection{Tree-based ensembles}
 
-To show how the presented algorithms work, we will introduce them formally.
+Tree-based ensembles are aggregates of single decision trees.  
+Ensemble learning techniques build a prediction models based on so-called \textit{weak learners}. In machine learning, weak learners
+-Bagging
+
+
+-Boosting
 
 The first step in GBDT is to initialize a model by taking the derivate of the loss function with a known target $ y_i $ and an unknown target prediction $ \gamma $ that is constant for all corresponding $ y_i $.
 \begin{equation}
@@ -60,8 +65,6 @@ Given this, we now update the former weak learner with the new one:
 where $ \alpha $ is the learning rate.
 
 \subsection{Neural Networks}
-- Example
-- Formal Definition
 
 \section{Feature Selection}
 
