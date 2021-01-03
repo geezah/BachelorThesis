@@ -15,6 +15,7 @@
 *.synctex.gz
 *.toc
 *.texput.log
+ds_latex/ds_seminar.pdf
 
 # Jupyter Notebook 
 *.cpython-38.pyc
