@@ -18,27 +18,31 @@ Although various supervised learning models use different mathematical procedure
 In order for a model to generalize the data properly, two things have to be avoided: \textbf{Underfitting} and \textbf{Overfitting}. Indicators for a underfitted model are poor predictions on both the training and test data, whereas a overfitted model does very well on the training data, but poorly on test data. Technically speaking, they occur when a model has either too few or many free available respectively to describe the underlying mapping of given training data. 
 
 \subsection{Linear Models}
-Linear regression models assume a linear relationship between dependent and independent variables, i.e. inputs and outputs. They aim to fit a linear equation of the form 
-\begin{equation}
-\hat Y(\mathbf{w},\mathbf{X}) = b + \sum_{i=1}^N w_1x_1 + w_2x_2 + \dots + w_px_p	
-\end{equation}
 
-to observed data, where $b \in \mathbb{R}$ is the intercept, $\{w_1, \dots, w_p\}$ are the weights and $\mathbf{X}$ is a matrix of dimensionality $p \times N$, i.e a matrix consisting of p features and N samples. Matrix notation is usually used for simplification purposes: 
-\begin{equation}
-	\hat Y(\mathbf{w},\mathbf{X}) = b + \mathbf{w^T}\mathbf{X}
-\end{equation}
-
-%\begin{equation*}
-%	\hat y(x,w) = \sum_{i=0}^N w_ix_i
-%\end{equation*}
 \subsection{Tree-based ensembles}
 
-Tree-based ensembles are aggregates of single decision trees.  
-Ensemble learning techniques build a prediction models based on so-called \textit{weak learners}. In machine learning, weak learners
--Bagging
+As shown in the literature review, tree-based methods are highly interpretable and powerful methods for the estimation of arrival times. Given is a set of pairs $ (x_i, y_i) $ for $ i = 1,2, ..., N $ with $ x_i = (x_{i1}, x_{i2}, ..., x_{iP}) $ where $ x_i $ is a vector representing the i-th example with p features, $ y_i $ is the corresponding target for $ x_i $, and N is the total amount of observations. The structure of regression trees allows sequential classification of given samples in a greedy fashion. Regression trees are unidirectional, binary data structures consisting of branch and terminal nodes, where former partition the given data wrt. a single attribute per branch node
+
+Let M denote the amount of terminal nodes and $ R_m $ for $ m = 1, ..., M $ the m-th terminal node.  
 
 
--Boosting
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
 
 The first step in GBDT is to initialize a model by taking the derivate of the loss function with a known target $ y_i $ and an unknown target prediction $ \gamma $ that is constant for all corresponding $ y_i $.
 \begin{equation}
