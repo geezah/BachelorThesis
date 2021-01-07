@@ -1,9 +1,14 @@
 \chapter{Methodology}
 This chapter presents the solution approach.
 Section 4.1 motivates our problem. 
-Section 4.2 discusses the selected features.
-Section 4.3 explains the algorithms considered in the comparison in detail.
+Section 4.2 gives and introduction to supervised learning and presents the algorithms considered in the comparison in detail.
+Section 4.3 is about the different feature selection techniques applied in the computational study. 
 Section 4.4 defines the process by which we evaluate the algorithms in order to assess the quality of each algorithm.
+
+\chapter{Motivation}
+
+- Why machine learning --> Why offline supervised learning --> Why Tree-Based ensembles and NNs
+- Why bother comparing them
 
 
 \section{Algorithms}
@@ -15,15 +20,16 @@ Supervised learning algorithms
 \newline
 Predictions can generally be made for either a \textbf{regression} or \textbf{classification} problem, which differ in the nature of their target variables. While regression is used to predict continuous targets, classification finds its use in the prediction of discrete targets. The arrival time estimation problem is a regression task since we are estimating (continuous) arrival times.
 Although various supervised learning models use different mathematical procedures to predict targets, all of them follow the principle of induction, meaning that general rules are inductively inferred from the observations. This is also called \textbf{generalization}.  
-In order for a model to generalize the data properly, two things have to be avoided: \textbf{Underfitting} and \textbf{Overfitting}. Indicators for a underfitted model are poor predictions on both the training and test data, whereas a overfitted model does very well on the training data, but poorly on test data. Technically speaking, they occur when a model has either too few or many free available respectively to describe the underlying mapping of given training data. 
+In order for a model to generalize the data properly, two things have to be avoided: \textbf{Underfitting} and \textbf{Overfitting}. Indicators for a underfitted model are poor predictions on both the training and test data, whereas a overfitted model does very well on the training data, but poorly on test data. Technically speaking, they occur when a model has either too few or many free available respectively to describe the underlying mapping of given training data.  
 
 \subsection{Linear Models}
 
 \subsection{Tree-based ensembles}
 
-As shown in the literature review, tree-based methods are highly interpretable and powerful methods for the estimation of arrival times. Given is a set of pairs $ (x_i, y_i) $ for $ i = 1,2, ..., N $ with $ x_i = (x_{i1}, x_{i2}, ..., x_{iP}) $ where $ x_i $ is a vector representing the i-th example with p features, $ y_i $ is the corresponding target for $ x_i $, and N is the total amount of observations. The structure of regression trees allows sequential classification of given samples in a greedy fashion. Regression trees are unidirectional, binary data structures consisting of branch and terminal nodes, where former partition the given data wrt. a single attribute per branch node
+As shown in the literature review, tree-based methods are highly interpretable and powerful methods for the estimation of arrival times. Given is a set of pairs $ (x_i, y_i) \in X \times Y$ for $ i = 1,2, ..., N $ with $ x_i = (x_{i1}, x_{i2}, ..., x_{iP}) $ where $ x_i \in X$ is a vector representing the i-th example with p features, $ y_i \in Y$ is the corresponding continuous target value for $ x_i $, and N is the total amount of observations. The structure of regression trees allows sequential classification of given samples in a greedy fashion. Regression trees are unidirectional, binary data structures consisting of branch and terminal nodes.
 
-Let M denote the amount of terminal nodes and $ R_m $ for $ m = 1, ..., M $ the m-th terminal node.  
+Let M denote the amount of terminal nodes and $ R_m $ with $ m = 1, ..., M $ the m-th terminal node. 
+
 
 
 
@@ -48,14 +54,14 @@ The first step in GBDT is to initialize a model by taking the derivate of the lo
 \begin{equation}
 F_{0}(x) =  \argmin_{\gamma} \sum_{i=1}^n L(y_i,\gamma) \label{gbdt_step1}
 \end{equation}
-Given the initial model $ F_0(x) $ respectively the former learner $ F_{m-1}(x) $, M regression trees can now be build sequentially as shown in the following. 
+Given the initial model $ F_0(x) $, M regression trees can now be build sequentially as shown in the following. 
 The first step computes pseudo-residuals $ r_{im} $ between the prediction value of the former learner for the i-th observation $ F_{m-1}(x) $ and the actual i-th target for the m-th tree $ y_i $by deriving the loss function w.r.t to $ F_{m-1}(x) $: 
 \begin{equation}
 	r_{im}\ = - \bigg[\dfrac{\delta L(y_i, F(x_i))}{\delta F(x_i)}\bigg]_{F(x) = F_{m-1}(x)}
 \end{equation} 
 for every i-th example.
 
-In the second step, the algorithm fits a regression tree to every $ r_{im} $ and creates disjoint regions (in decision tree terminology $\widehat{=}$ \glqq leaves\grqq) $ R_{jm} $ for $j = 1, ..., J_m$. 
+In the second step, the algorithm fits a regression tree to every $ r_{im} $ and creates disjoint regions $ R_{jm} $ for $j = 1, ..., J_m$. 
 
 In the third step, we compute: 
 \begin{equation}
@@ -66,7 +72,7 @@ Given this, we now update the former weak learner with the new one:
 \begin{equation}
 	F_m(x) = F_{m-1}(x) + \alpha \sum_{j=1}^{J_m} \gamma_{m}I(x \in R_{jm})
 \end{equation}
-where $ \alpha $ is the learning rate.
+where $ \alpha $ is the learning rate, and $ I(x \in R_{jm}) $ is the indicator function.
 
 \subsection{Neural Networks}
 
