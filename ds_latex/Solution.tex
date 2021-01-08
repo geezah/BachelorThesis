@@ -12,24 +12,51 @@ Section 4.4 defines the process by which we evaluate the algorithms in order to 
 
 
 \section{Algorithms}
-This section gives a short introduction to the conceptual framework of machine learning and then examines the algorithms included in our comparison. For further research, the interested reader is referred to \cite{Bishop} and \cite{SLFoundations}.
-\newline
-\newline
-Supervised learning algorithms 
-\newline
-\newline
-Predictions can generally be made for either a \textbf{regression} or \textbf{classification} problem, which differ in the nature of their target variables. While regression is used to predict continuous targets, classification finds its use in the prediction of discrete targets. The arrival time estimation problem is a regression task since we are estimating (continuous) arrival times.
-Although various supervised learning models use different mathematical procedures to predict targets, all of them follow the principle of induction, meaning that general rules are inductively inferred from the observations. This is also called \textbf{generalization}.  
-In order for a model to generalize the data properly, two things have to be avoided: \textbf{Underfitting} and \textbf{Overfitting}. Indicators for a underfitted model are poor predictions on both the training and test data, whereas a overfitted model does very well on the training data, but poorly on test data. Technically speaking, they occur when a model has either too few or many free available respectively to describe the underlying mapping of given training data.  
+
+This section gives a short introduction to the conceptual framework of supervised learning and then examines the algorithms included in our comparison. For further research, the interested reader is referred to \cite{Bishop} and \cite{SLFoundations}. This chapter requires basic knowledge in set theory, linear algebra and analysis.
+
+Given is a finite set $ S = \{(\textbf{x}_{2}, y_2), (\textbf{x}_{2}, y_2), \dots, (\textbf{x}_{n}, y_n)\}$ of N pairs from $ X \times Y $ as inputs based on which supervised learning models aim to approximate a \textbf{hypothesis} $ h: X \to Y $  that fits the ground truth relationship between $ X $ and $ Y $ well in order to predict $ y_i $ for any $ x_i $ by means of $ h \in H $ accurately, with $ H $ being the \textbf{hypothesis space}. In supervised learning, $ X $ is called the \textbf{input space} consisting of N observations described by p (independent) \textbf{feature variables}, whereas $ Y $ represents the \textbf{output space} containing the corresponding target value $ y_i $ for any given $ x_i $:   
+\begin{equation*}
+X = 
+\begin{pmatrix}
+\textbf{x}_{1} \\
+\textbf{x}_{2} \\
+\vdots \\
+\textbf{x}_{n} \\
+\end{pmatrix} 
+=
+\begin{pmatrix}
+x_{1,1} & x_{1,2} & \cdots & x_{1,p} \\
+x_{2,1} & x_{2,2} & \cdots & x_{2,p} \\
+\vdots  & \vdots  & \ddots & \vdots \\
+x_{n,1} & x_{n,2} & \cdots & x_{n,p} \\
+\end{pmatrix}
+,
+Y = 
+\begin{pmatrix}
+y_{1} \\
+y_{2} \\
+\vdots \\
+y_{n} \\
+\end{pmatrix}
+\end{equation*}
+The accuracy of a prediction $ h(x_i) = \hat{y}_{i} $ for a given $ x_i $ is measured with an arbitrarily chosen \textbf{loss function} (or synonymously: \textit{cost function}) $ L : Y \times Y \to \mathbb{R}^{\geq 0}$. 
+For a given pair $ (x_i, y_i) $, the loss function $ L(y_i, \hat{y}_i) $ represents the deviance of a predicted target $ \hat{y}_{i} $ from the ground truth target $ y_i $.
+
+
+Predictions can generally be made for either a \textbf{regression} or \textbf{classification} problem which differ in the nature of their target variable. While regression is used to predict continuous targets $ Y = \mathbb{R} $, classification predicts discrete $ Y $. The arrival time estimation problem is a regression task since we are estimating (continuous) arrival times.
+Although various supervised learning models use different mathematical procedures to predict targets, all of them follow the principle of induction, meaning that general rules are inductively inferred from labelled data. This is also called \textbf{generalization}.  
+In order for a model to generalize the data properly, two things have to be avoided: \textbf{Underfitting} and \textbf{Overfitting}. Poor predictions on both the training and test data indicate a underfitted model, whereas a overfitted model does very well on training data, but poorly on test data. In supervised learning, this problem is known as the \textbf{bias-variance tradeoff}. A overfitted model is low in bias and high in variance, whereas the same goes vice versa for underfitted models. The key challenge therefore lies in discovering a model that is ideally low in bias and low in variance and thus has good prediction accuracy especially on test data. 
 
 \subsection{Linear Models}
 
 \subsection{Tree-based ensembles}
 
-As shown in the literature review, tree-based methods are highly interpretable and powerful methods for the estimation of arrival times. Given is a set of pairs $ (x_i, y_i) \in X \times Y$ for $ i = 1,2, ..., N $ with $ x_i = (x_{i1}, x_{i2}, ..., x_{iP}) $ where $ x_i \in X$ is a vector representing the i-th example with p features, $ y_i \in Y$ is the corresponding continuous target value for $ x_i $, and N is the total amount of observations. The structure of regression trees allows sequential classification of given samples in a greedy fashion. Regression trees are unidirectional, binary data structures consisting of branch and terminal nodes.
+As shown in the literature review, tree-based methods are popular in the field of arrival time estimation. 
+
+The structure of regression trees allows  of given samples in a greedy fashion. Regression trees are unidirectional, binary data structures consisting of branch and terminal nodes.
 
 Let M denote the amount of terminal nodes and $ R_m $ with $ m = 1, ..., M $ the m-th terminal node. 
-
 
 
 
