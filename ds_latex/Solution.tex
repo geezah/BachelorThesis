@@ -5,7 +5,7 @@ Section 4.2 gives and introduction to supervised learning and presents the algor
 Section 4.3 is about the different feature selection techniques applied in the computational study. 
 Section 4.4 defines the process by which we evaluate the algorithms in order to assess the quality of each algorithm.
 
-\chapter{Motivation}
+\section{Motivation}
 
 - Why machine learning --> Why offline supervised learning --> Why Tree-Based ensembles and NNs
 - Why bother comparing them
@@ -13,9 +13,10 @@ Section 4.4 defines the process by which we evaluate the algorithms in order to 
 
 \section{Algorithms}
 
-This section gives a short introduction to the conceptual framework of supervised learning and then examines the algorithms included in our comparison. For further research, the interested reader is referred to \cite{Bishop} and \cite{SLFoundations}. This chapter requires basic knowledge in set theory, linear algebra and analysis.
+This section shortly introduces the framework of supervised learning to proceed with the detailed examination of how each algorithm included in our comparison works. This chapter requires basic knowledge in set theory, linear algebra, analysis and statistics.
 
-Given is a finite set $ S = \{(\textbf{x}_{2}, y_2), (\textbf{x}_{2}, y_2), \dots, (\textbf{x}_{n}, y_n)\}$ of N pairs from $ X \times Y $ as inputs based on which supervised learning models aim to approximate a \textbf{hypothesis} $ h: X \to Y $  that fits the ground truth relationship between $ X $ and $ Y $ well in order to predict $ y_i $ for any $ x_i $ by means of $ h \in H $ accurately, with $ H $ being the \textbf{hypothesis space}. In supervised learning, $ X $ is called the \textbf{input space} consisting of N observations described by p (independent) \textbf{feature variables}, whereas $ Y $ represents the \textbf{output space} containing the corresponding target value $ y_i $ for any given $ x_i $:   
+Supervised learning models receive \textbf{training data} in form of a finite set $ S = \{(\textbf{x}_{2}, y_2), (\textbf{x}_{2}, y_2), \dots, (\textbf{x}_{n}, y_n)\}$ of N pairs from $ X \times Y $ as inputs based on which they aim to approximate a \textbf{hypothesis} $ h: X \to Y $  that maps the ground truth relationship between $ X $ and $ Y $ well in order to have a \textbf{model} that is able to make a prediction $ h(\textbf{x}) $ for any, but especially $ \textbf{x} \notin S $ accurately by means of $ h \in H $. All $ \textbf{x} \in X $ not contained in the training data $ S $ is called \textbf{test data}. 
+In supervised learning, $ X $ is the \textbf{feature space} represented as a matrix of N \textbf{observations} with each of them being described by p \textbf{features}. $ Y $ is the \textbf{label space} that contains the corresponding \textbf{label} $ y \in Y $ to a observation $ \textbf{x} $ and is represented as a N-dimensional vector:   
 \begin{equation*}
 X = 
 \begin{pmatrix}
@@ -40,34 +41,21 @@ y_{2} \\
 y_{n} \\
 \end{pmatrix}
 \end{equation*}
-The accuracy of a prediction $ h(x_i) = \hat{y}_{i} $ for a given $ x_i $ is measured with an arbitrarily chosen \textbf{loss function} (or synonymously: \textit{cost function}) $ L : Y \times Y \to \mathbb{R}^{\geq 0}$. 
-For a given pair $ (x_i, y_i) $, the loss function $ L(y_i, \hat{y}_i) $ represents the deviance of a predicted target $ \hat{y}_{i} $ from the ground truth target $ y_i $.
-
-
+The prediction accuracy of an hypothesis $ h $ is measured with an arbitrarily chosen \textbf{loss function} (or synonymously: \textit{cost function}) $ L : Y \times Y \to \mathbb{R}^{\geq 0}$. For a given pair $ (\textbf{x}_i, y_i) $, the loss function $ L(y_i, h(\textbf{x}_i)) $ represents the deviance of a predicted target $ h(\textbf{x}_i) $ from the ground truth target $ y_i $. 
+% Done: io structure, loss function, hypothesis, training and test data
+% Todo: Set loss function in context to hypothesis (je kleiner loss desto besser hypothese)  
 Predictions can generally be made for either a \textbf{regression} or \textbf{classification} problem which differ in the nature of their target variable. While regression is used to predict continuous targets $ Y = \mathbb{R} $, classification predicts discrete $ Y $. The arrival time estimation problem is a regression task since we are estimating (continuous) arrival times.
-Although various supervised learning models use different mathematical procedures to predict targets, all of them follow the principle of induction, meaning that general rules are inductively inferred from labelled data. This is also called \textbf{generalization}.  
-In order for a model to generalize the data properly, two things have to be avoided: \textbf{Underfitting} and \textbf{Overfitting}. Poor predictions on both the training and test data indicate a underfitted model, whereas a overfitted model does very well on training data, but poorly on test data. In supervised learning, this problem is known as the \textbf{bias-variance tradeoff}. A overfitted model is low in bias and high in variance, whereas the same goes vice versa for underfitted models. The key challenge therefore lies in discovering a model that is ideally low in bias and low in variance and thus has good prediction accuracy especially on test data. 
-
+Although various supervised learning models use different mathematical procedures to predict targets, all of them follow the principle of induction, meaning that general rules are inductively inferred from made observations, i.e. training data. This is also called \textbf{generalization}.  
+In order for a model to generalize well, two phenomenons have to be avoided: \textbf{Underfitting} and \textbf{Overfitting}. Poor predictions on both the training and test data indicate that a model is underfitted, whereas an overfitted model is characterized by very good prediction accuracy on the training data, but poor accuracy on test data. Technically speaking, they occur when a model has either too few or too many free parameters. In supervised learning, this is known as the \textbf{bias-variance tradeoff}. A overfitted model is low in bias and high in variance, whereas the same goes vice versa for underfitted models. The key challenge therefore lies in discovering a model that is ideally low in bias and low in variance and thus has good prediction accuracy especially on test data.
+ 
 \subsection{Linear Models}
 
 \subsection{Tree-based ensembles}
 
 As shown in the literature review, tree-based methods are popular in the field of arrival time estimation. 
-
-The structure of regression trees allows  of given samples in a greedy fashion. Regression trees are unidirectional, binary data structures consisting of branch and terminal nodes.
+The structure of regression trees allows classification of given samples in a greedy fashion. Regression trees are unidirectional, binary data structures consisting of branch and terminal nodes. Branch nodes partition samples according to a binary condition. Terminal nodes represent disjunct regions containing the samples based on former partitions made by the branch nodes.
 
 Let M denote the amount of terminal nodes and $ R_m $ with $ m = 1, ..., M $ the m-th terminal node. 
-
-
-
-
-
-
-
-
- 
-
-
 
 
 
@@ -99,7 +87,7 @@ Given this, we now update the former weak learner with the new one:
 \begin{equation}
 	F_m(x) = F_{m-1}(x) + \alpha \sum_{j=1}^{J_m} \gamma_{m}I(x \in R_{jm})
 \end{equation}
-where $ \alpha $ is the learning rate, and $ I(x \in R_{jm}) $ is the indicator function.
+where $ \alpha $ is the learning rate, and $ I(\cdot) $ is the indicator function.
 
 \subsection{Neural Networks}
 
