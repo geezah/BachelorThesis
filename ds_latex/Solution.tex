@@ -13,49 +13,40 @@ Section 4.4 defines the process by which we evaluate the algorithms in order to 
 
 \section{Algorithms}
 
-This section shortly introduces the framework of supervised learning to proceed with the detailed examination of how each algorithm included in our comparison works. This chapter requires basic knowledge in set theory, linear algebra, analysis and statistics.
+This section shortly introduces the statistical framework of supervised learning and then proceeds with the detailed examination of how each algorithm included in our comparison works.  
 
-Supervised learning models receive \textbf{training data} in form of a finite set $ S = \{(\textbf{x}_{2}, y_2), (\textbf{x}_{2}, y_2), \dots, (\textbf{x}_{n}, y_n)\}$ of N pairs from $ X \times Y $ as inputs based on which they aim to approximate a \textbf{hypothesis} $ h: X \to Y $  that maps the ground truth relationship between $ X $ and $ Y $ well in order to have a \textbf{model} that is able to make a prediction $ h(\textbf{x}) $ for any, but especially $ \textbf{x} \notin S $ accurately by means of $ h \in H $. All $ \textbf{x} \in X $ not contained in the training data $ S $ is called \textbf{test data}. 
-In supervised learning, $ X $ is the \textbf{feature space} represented as a matrix of N \textbf{observations} with each of them being described by p \textbf{features}. $ Y $ is the \textbf{label space} that contains the corresponding \textbf{label} $ y \in Y $ to a observation $ \textbf{x} $ and is represented as a N-dimensional vector:   
-\begin{equation*}
-X = 
-\begin{pmatrix}
-\textbf{x}_{1} \\
-\textbf{x}_{2} \\
-\vdots \\
-\textbf{x}_{n} \\
-\end{pmatrix} 
-=
-\begin{pmatrix}
-x_{1,1} & x_{1,2} & \cdots & x_{1,p} \\
-x_{2,1} & x_{2,2} & \cdots & x_{2,p} \\
-\vdots  & \vdots  & \ddots & \vdots \\
-x_{n,1} & x_{n,2} & \cdots & x_{n,p} \\
-\end{pmatrix}
-,
-Y = 
-\begin{pmatrix}
-y_{1} \\
-y_{2} \\
-\vdots \\
-y_{n} \\
-\end{pmatrix}
-\end{equation*}
-The prediction accuracy of an hypothesis $ h $ is measured with an arbitrarily chosen \textbf{loss function} (or synonymously: \textit{cost function}) $ L : Y \times Y \to \mathbb{R}^{\geq 0}$. For a given pair $ (\textbf{x}_i, y_i) $, the loss function $ L(y_i, h(\textbf{x}_i)) $ represents the deviance of a predicted target $ h(\textbf{x}_i) $ from the ground truth target $ y_i $. 
-% Done: io structure, loss function, hypothesis, training and test data
-% Todo: Set loss function in context to hypothesis (je kleiner loss desto besser hypothese)  
-Predictions can generally be made for either a \textbf{regression} or \textbf{classification} problem which differ in the nature of their target variable. While regression is used to predict continuous targets $ Y = \mathbb{R} $, classification predicts discrete $ Y $. The arrival time estimation problem is a regression task since we are estimating (continuous) arrival times.
-Although various supervised learning models use different mathematical procedures to predict targets, all of them follow the principle of induction, meaning that general rules are inductively inferred from made observations, i.e. training data. This is also called \textbf{generalization}.  
-In order for a model to generalize well, two phenomenons have to be avoided: \textbf{Underfitting} and \textbf{Overfitting}. Poor predictions on both the training and test data indicate that a model is underfitted, whereas an overfitted model is characterized by very good prediction accuracy on the training data, but poor accuracy on test data. Technically speaking, they occur when a model has either too few or too many free parameters. In supervised learning, this is known as the \textbf{bias-variance tradeoff}. A overfitted model is low in bias and high in variance, whereas the same goes vice versa for underfitted models. The key challenge therefore lies in discovering a model that is ideally low in bias and low in variance and thus has good prediction accuracy especially on test data.
+As inputs, supervised learning algorithms receive \textbf{training data} in form of a finite set $ S = \{({x}_{2}, y_2), ({x}_{2}, y_2), \dots, ({x}_{n}, y_n)\}$ of N pairs from $ \mathcal{X} \times \mathcal{Y} $ where $ x_i $ is an \textbf{sample} associated to it's corresponding \textbf{label} $ y_i $.
+They return a \textbf{hypothesis} $ h: \mathcal{X} \to \mathcal{Y} $ that aims to predict the corresponding label $ y \in Y $ for any $ x \in X $, but especially for $ x \notin S $.
+We further assume a joint probability distribution $ P $ over $ \mathcal{X} $ and $ \mathcal{Y} $ each pair is identically and independently distributed according to. 
+This assumption allows us to take uncertainties of predictions into account.
+Thus, $ h(x) $ can be treated as a random variable being conditionally distributed with $ P(y | x) $ for a given $ x $, not as a deterministic function of $ x $.
+The prediction accuracy of $ h $ is measured with a  \textbf{loss function} $ L : Y \times Y \to \mathbb{R}^{\geq 0}$.
+For a given pair $ ({x}_i, y_i) $, the loss function $ L(y_i, \hat{y}_i) $ represents the deviance of a predicted label $ \hat{y_i} $ from the actual corresponding label $ y_i $ of $ x_i $. 
+The average loss across all $ x \in S $ is called \textbf{empirical risk} associated with the hypothesis.
+Thus, the goal of a supervised learning algorithm is to find the optimal hypothesis $ h^* $ for which the overall empirical risk is minimal: 
+\begin{equation}
+	h^* = \argmin_{h \in H} \dfrac{1}{n} \sum_{i=1}^{n} L(h(x_i), y_i)
+\end{equation}
+
+Predictions can generally be made for either a \textbf{regression} or \textbf{classification} problem which differ in the nature of their target variable. 
+While regression is used to predict continuous targets $ Y = \mathbb{R} $, classification predicts discrete $ Y $. The arrival time estimation problem is a regression task since we are estimating (continuous) arrival times.
+Although various supervised learning models use different mathematical procedures to predict targets, all of them follow the principle of induction, meaning that general rules are inductively inferred from training data. This is also called \textbf{generalization}.  
+In order for a model to generalize well, two phenomena have to be avoided: \textbf{Underfitting} and \textbf{Overfitting}. 
+Poor predictions on both the training and test data indicate that a model is underfitted, whereas an overfitted model is characterized by very good prediction accuracy on the training data, but poor accuracy on test data. 
+In supervised learning, this is known as the \textbf{bias-variance tradeoff}. 
+A overfitted model is low in bias and high in variance, whereas the same goes vice versa for underfitted models. 
+The key challenge therefore lies in discovering a model that is ideally low in bias and low in variance and thus has good prediction accuracy especially on test data.
  
 \subsection{Linear Models}
 
 \subsection{Tree-based ensembles}
 
-As shown in the literature review, tree-based methods are popular in the field of arrival time estimation. 
-The structure of regression trees allows classification of given samples in a greedy fashion. Regression trees are unidirectional, binary data structures consisting of branch and terminal nodes. Branch nodes partition samples according to a binary condition. Terminal nodes represent disjunct regions containing the samples based on former partitions made by the branch nodes.
+As shown in the literature review, tree-based ensembles like GBDTs and Random Forests are popular in the field of arrival time estimation. Behind ensemble learning lies the idea that combinations or \textit{ensembles} of many so called \textit{base learners}, form an accurate prediction model.  
 
-Let M denote the amount of terminal nodes and $ R_m $ with $ m = 1, ..., M $ the m-th terminal node. 
+A single decision tree is given by
+\begin{equation}
+h(x) = \sum_{m=1}^{M} c_m I(x \in R_m)
+\end{equation}
 
 
 
@@ -67,12 +58,12 @@ Let M denote the amount of terminal nodes and $ R_m $ with $ m = 1, ..., M $ the
 
 The first step in GBDT is to initialize a model by taking the derivate of the loss function with a known target $ y_i $ and an unknown target prediction $ \gamma $ that is constant for all corresponding $ y_i $.
 \begin{equation}
-F_{0}(x) =  \argmin_{\gamma} \sum_{i=1}^n L(y_i,\gamma) \label{gbdt_step1}
+h_{0}(x) =  \argmin_{\gamma} \sum_{i=1}^n L(y_i,\gamma) \label{gbdt_step1}
 \end{equation}
-Given the initial model $ F_0(x) $, M regression trees can now be build sequentially as shown in the following. 
-The first step computes pseudo-residuals $ r_{im} $ between the prediction value of the former learner for the i-th observation $ F_{m-1}(x) $ and the actual i-th target for the m-th tree $ y_i $by deriving the loss function w.r.t to $ F_{m-1}(x) $: 
+Given the initial model $ h_0(x) $, M regression trees can now be build sequentially as shown in the following. 
+The first step computes pseudo-residuals $ r_{im} $ between the prediction value of the former learner for the i-th sample $ h_{m-1}(x) $ and the actual i-th target for the m-th tree $ y_i $by deriving the loss function w.r.t to $ h_{m-1}(x) $: 
 \begin{equation}
-	r_{im}\ = - \bigg[\dfrac{\delta L(y_i, F(x_i))}{\delta F(x_i)}\bigg]_{F(x) = F_{m-1}(x)}
+	r_{im}\ = - \bigg[\dfrac{\delta L(y_i, h(x_i))}{\delta h(x_i)}\bigg]_{h(x) = h_{m-1}(x)}
 \end{equation} 
 for every i-th example.
 
@@ -80,12 +71,12 @@ In the second step, the algorithm fits a regression tree to every $ r_{im} $ and
 
 In the third step, we compute: 
 \begin{equation}
-	\gamma_{jm} = \argmin_{\gamma} \sum_{x_i \in R_{ij}} L(y_i, F_{m-1}(x_i) + \gamma)
+	\gamma_{jm} = \argmin_{\gamma} \sum_{x_i \in R_{ij}} L(y_i, h_{m-1}(x_i) + \gamma)
 \end{equation}
 for every terminal region j in the m-th tree. 
 Given this, we now update the former weak learner with the new one:
 \begin{equation}
-	F_m(x) = F_{m-1}(x) + \alpha \sum_{j=1}^{J_m} \gamma_{m}I(x \in R_{jm})
+	h_m(x) = h_{m-1}(x) + \alpha \sum_{j=1}^{J_m} \gamma_{m}I(x \in R_{jm})
 \end{equation}
 where $ \alpha $ is the learning rate, and $ I(\cdot) $ is the indicator function.
 
