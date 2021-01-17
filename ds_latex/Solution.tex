@@ -41,21 +41,33 @@ The key challenge therefore lies in discovering a model that is ideally low in b
 
 \subsection{Tree-based ensembles}
 
-As shown in the literature review, tree-based ensembles like GBDTs and Random Forests are popular in the field of arrival time estimation. Behind ensemble learning lies the idea that combinations or \textit{ensembles} of many so called \textit{base learners}, form an accurate prediction model.  
-
+As shown in the literature review, tree-based ensembles like GBDTs and Random Forests are popular in the field of arrival time estimation. Behind ensemble learning lies the idea that so called \textit{weak learners} produce rather inaccurate results on their own, but form an accurate prediction model when they are combined. For tree-based ensembles, a single base learner is a decision tree.  
+Decision trees partition the feature space into distinct regions and then fit a single learner to each region. 
 A single decision tree is given by
 \begin{equation}
 h(x) = \sum_{m=1}^{M} c_m I(x \in R_m)
 \end{equation}
+where $ c_m $ is the constant representing the prediction for all samples belonging to the m-th terminal region $ R_m $.
+Assuming that the loss is measured with an l2-metric, the predicted constant $ \hat{c}_m $ for each terminal region $ R_m $ is the average of all $ y $ for each $ x \in R_m $:
+\begin{equation}
+	\hat{c}_m =  \dfrac{1}{N_{R_m}}\sum_{x_i \in R_m}^{} y_i
+\end{equation}
+
+with $ N_Rm $ being the number of samples in $ R_m $. Given this, the decision tree algorithm needs to find optimal binary partitions. Solving this analytically is computationally infeasible. Therefore, a greedy approach is used.
+Let $ j $ be the split variable, representing the feature based on which the split of the feature space is done on, and $ s $ its associated split threshold.
+The initial partition creates two disjoint regions
+\begin{equation}
+	R_1 (j,s) = \{X | X_j < s \}, R_{2} = \{X | X_j > s\}.
+\end{equation}
+
+To find $ j $ and $ s $ that minimize the overall loss for both terminal regions $ R_1 $ and $ R_2 $, the greedy algorithm initially solves
+
+\begin{equation}\label{minjs}
+	\min_{j,s} \bigg [\min_{\hat{c}_1} \sum_{x_i \in R_1(j,s)} L(y_i, \hat{c}_1) + \min_{\hat{c}_2} \sum_{x_i \in R_{2}(j,s)} L(y_i, \hat{c}_{2})].
+\end{equation}
 
 
-
-
-
-
-
-
-
+\newpage
 The first step in GBDT is to initialize a model by taking the derivate of the loss function with a known target $ y_i $ and an unknown target prediction $ \gamma $ that is constant for all corresponding $ y_i $.
 \begin{equation}
 h_{0}(x) =  \argmin_{\gamma} \sum_{i=1}^n L(y_i,\gamma) \label{gbdt_step1}
