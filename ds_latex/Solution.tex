@@ -23,9 +23,9 @@ Thus, $ h(x) $ can be treated as a random variable being conditionally distribut
 The prediction accuracy of $ h $ is measured with a  \textbf{loss function} $ L : Y \times Y \to \mathbb{R}^{\geq 0}$.
 For a given pair $ ({x}_i, y_i) $, the loss function $ L(y_i, \hat{y}_i) $ represents the deviance of a predicted label $ \hat{y_i} $ from the actual corresponding label $ y_i $ of $ x_i $. 
 The average loss across all $ x \in S $ is called \textbf{empirical risk} associated with the hypothesis.
-Thus, the goal of a supervised learning algorithm is to find the optimal hypothesis $ h^* $ for which the overall empirical risk is minimal: 
+Thus, the goal of a supervised learning algorithm is to find the optimal hypothesis $ h^* $ for which the overall empirical risk is minimal (\cite{SLFoundations}): 
 \begin{equation}
-	h^* = \argmin_{h \in H} \dfrac{1}{n} \sum_{i=1}^{n} L(h(x_i), y_i)
+	h^* = \argmin_{h \in H} \dfrac{1}{n} \sum_{i=1}^{n} L(h(x_i), y_i).
 \end{equation}
 
 Predictions can generally be made for either a \textbf{regression} or \textbf{classification} problem which differ in the nature of their target variable. 
@@ -41,14 +41,13 @@ The key challenge therefore lies in discovering a model that is ideally low in b
 
 \subsection{Tree-based ensembles}
 
-As shown in the literature review, tree-based ensembles like GBDTs and Random Forests are popular in the field of arrival time estimation. Behind ensemble learning lies the idea that so called \textit{weak learners} produce rather inaccurate results on their own, but form an accurate prediction model when they are combined. For tree-based ensembles, a single base learner is a decision tree.  
+As shown in the literature review, tree-based ensembles like GBDTs and Random Forests are popular in the field of arrival time estimation. Behind ensemble learning lies the idea that so called \textit{weak learners} produce rather inaccurate results on their own, but form an accurate prediction model when they are combined. For tree-based ensembles, decision trees are the weak learners. 
 Decision trees partition the feature space into distinct regions and then fit a single learner to each region. 
 A single decision tree is given by
 \begin{equation}
 h(x) = \sum_{m=1}^{M} c_m I(x \in R_m)
 \end{equation}
-where $ c_m $ is the constant representing the prediction for all samples belonging to the m-th terminal region $ R_m $.
-Assuming that the loss is measured with an l2-metric, the predicted constant $ \hat{c}_m $ for each terminal region $ R_m $ is the average of all $ y $ for each $ x \in R_m $:
+where $ c_m $ is the constant representing the prediction for all samples belonging to the m-th terminal region $ R_m $. Adopting the mean squared error as the loss metric, the predicted constant $ \hat{c}_m $ for each terminal region $ R_m $ is the average of all $ y $ for each $ x \in R_m $:
 \begin{equation}
 	\hat{c}_m =  \dfrac{1}{N_{R_m}}\sum_{x_i \in R_m}^{} y_i
 \end{equation}
@@ -60,18 +59,33 @@ The initial partition creates two disjoint regions
 	R_1 (j,s) = \{X | X_j < s \}, R_{2} = \{X | X_j > s\}.
 \end{equation}
 
-To find $ j $ and $ s $ that minimize the overall loss for both terminal regions $ R_1 $ and $ R_2 $, the greedy algorithm initially solves
+The algorithm seek optimal $ j $ and $ s $ that minimize the overall loss for both terminal regions $ R_1 $ and $ R_2 $.
 
 \begin{equation}\label{minjs}
-	\min_{j,s} \bigg [\min_{\hat{c}_1} \sum_{x_i \in R_1(j,s)} L(y_i, \hat{c}_1) + \min_{\hat{c}_2} \sum_{x_i \in R_{2}(j,s)} L(y_i, \hat{c}_{2})].
+	\min_{j,s} \bigg [\min_{\hat{c}_1} \sum_{x_i \in R_1(j,s)} \dfrac{1}{2}(y_i - \hat{c}_{2})^2 + \min_{\hat{c}_2} \sum_{x_i \in R_{2}(j,s)} \dfrac{1}{2}(y_i - \hat{c}_{2})^2\bigg]
 \end{equation}
 
+Having found the optimal split variable and split threshold, this procedure is repeated for each terminal region.
+%TODO: When does algorithm terminate? 
+Knowing how CART builds regression trees, we now advance to tree-based ensemble learners which create ensembles of decision trees in their own ways each.
+Two different approaches of ensemble learning are \textbf{bagging} and \textbf{boosting}. Bagging, shorthand for \textit{bootstrap aggregating}, creates bootstrapped datasets of the training data, fits a learner to each bootstrapped set and aggregates all learners.
 
-\newpage
-The first step in GBDT is to initialize a model by taking the derivate of the loss function with a known target $ y_i $ and an unknown target prediction $ \gamma $ that is constant for all corresponding $ y_i $.
+%Why this works
+%Introduction RF
+%Detailed explanation of algorithm  
+
+Boosting. 
+This paper includes Random Forests and GBDTs in its comparison, since we found them to be very present in current research.  
+
+%Unterschied Bagging Boosting
+
+
+%Gradient Boosting Trees einleiten
+The first step in GBDT is to initialize a model with a constant predictor $ \hat{c} $ that minimizes the overall loss across all training samples.
 \begin{equation}
-h_{0}(x) =  \argmin_{\gamma} \sum_{i=1}^n L(y_i,\gamma) \label{gbdt_step1}
+h_{0}(x) =  \argmin_{\hat{c}} \sum_{i=1}^n L(y_i,\hat{c}) \label{gbdt_step1}
 \end{equation}
+Using mean squared error as the loss metric, the predictor minimizing the overall loss is simply the average of all $ y $.
 Given the initial model $ h_0(x) $, M regression trees can now be build sequentially as shown in the following. 
 The first step computes pseudo-residuals $ r_{im} $ between the prediction value of the former learner for the i-th sample $ h_{m-1}(x) $ and the actual i-th target for the m-th tree $ y_i $by deriving the loss function w.r.t to $ h_{m-1}(x) $: 
 \begin{equation}
@@ -83,25 +97,19 @@ In the second step, the algorithm fits a regression tree to every $ r_{im} $ and
 
 In the third step, we compute: 
 \begin{equation}
-	\gamma_{jm} = \argmin_{\gamma} \sum_{x_i \in R_{ij}} L(y_i, h_{m-1}(x_i) + \gamma)
+	\hat{c}_{jm} = \argmin_{\hat{c}} \sum_{x_i \in R_{ij}} L(y_i, h_{m-1}(x_i) + \hat{c})
 \end{equation}
 for every terminal region j in the m-th tree. 
 Given this, we now update the former weak learner with the new one:
 \begin{equation}
-	h_m(x) = h_{m-1}(x) + \alpha \sum_{j=1}^{J_m} \gamma_{m}I(x \in R_{jm})
+	h_m(x) = h_{m-1}(x) + \alpha \sum_{j=1}^{J_m} \hat{c}_{m}I(x \in R_{jm})
 \end{equation}
 where $ \alpha $ is the learning rate, and $ I(\cdot) $ is the indicator function.
 
 \subsection{Neural Networks}
+%\section{Feature Selection}
 
-\section{Feature Selection}
-
-As shown, researchers used different feature selection methods. A majority of the presented papers crafted their features manually relying on their domain expertise, whereas others (e.g \cite{Siripanpornchana2016_AnnWithDbnFS} and \cite{Huang2018_GBDT}) used representation learning techniques.
-
-
-- Raw Data 
-- Manual feature selection
-- Feature learning via deep autoencoder
+%As shown, researchers used different feature selection methods. A majority of the presented papers crafted their features manually relying on domain expertise, whereas others (e.g \cite{Siripanpornchana2016_AnnWithDbnFS} and \cite{Huang2018_GBDT}) used representation learning techniques.
 
 \section{Evaluation} 
 - Use MSE, MAE, MAPE etc. to derive infos about accuracy
