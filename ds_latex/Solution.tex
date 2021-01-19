@@ -10,7 +10,6 @@ Section 4.4 defines the process by which we evaluate the algorithms in order to 
 - Why machine learning --> Why offline supervised learning --> Why Tree-Based ensembles and NNs
 - Why bother comparing them
 
-
 \section{Algorithms}
 
 This section shortly introduces the statistical framework of supervised learning and then proceeds with the detailed examination of how each algorithm included in our comparison works.  
@@ -41,7 +40,7 @@ The key challenge therefore lies in discovering a model that is ideally low in b
 
 \subsection{Tree-based ensembles}
 
-As shown in the literature review, tree-based ensembles like GBDTs and Random Forests are popular in the field of arrival time estimation. Behind ensemble learning lies the idea that so called \textit{weak learners} produce rather inaccurate results on their own, but form an accurate prediction model when they are combined. For tree-based ensembles, decision trees are the weak learners. 
+As shown in the literature review, tree-based ensembles like GBDTs and Random Forests are popular in the field of arrival time estimation. Behind ensemble learning lies the idea that so called \textit{base learners} produce rather inaccurate results on their own, but form an accurate prediction model when they are combined. For tree-based ensembles, decision trees are the base learners. 
 Decision trees partition the feature space into distinct regions and then fit a single learner to each region. 
 A single decision tree is given by
 \begin{equation}
@@ -51,33 +50,25 @@ where $ c_m $ is the constant representing the prediction for all samples belong
 \begin{equation}
 	\hat{c}_m =  \dfrac{1}{N_{R_m}}\sum_{x_i \in R_m}^{} y_i
 \end{equation}
-
 with $ N_Rm $ being the number of samples in $ R_m $. Given this, the decision tree algorithm needs to find optimal binary partitions. Solving this analytically is computationally infeasible. Therefore, a greedy approach is used.
 Let $ j $ be the split variable, representing the feature based on which the split of the feature space is done on, and $ s $ its associated split threshold.
 The initial partition creates two disjoint regions
 \begin{equation}
 	R_1 (j,s) = \{X | X_j < s \}, R_{2} = \{X | X_j > s\}.
 \end{equation}
-
-The algorithm seek optimal $ j $ and $ s $ that minimize the overall loss for both terminal regions $ R_1 $ and $ R_2 $.
-
+The algorithm seeks optimal $ j $ and $ s $ by finding constants that minimize the overall loss for both terminal regions $ R_1 $ and $ R_2 $.
 \begin{equation}\label{minjs}
 	\min_{j,s} \bigg [\min_{\hat{c}_1} \sum_{x_i \in R_1(j,s)} \dfrac{1}{2}(y_i - \hat{c}_{2})^2 + \min_{\hat{c}_2} \sum_{x_i \in R_{2}(j,s)} \dfrac{1}{2}(y_i - \hat{c}_{2})^2\bigg]
 \end{equation}
+Having found the optimal split variable and split threshold, this procedure is repeated for each terminal region until a termination condition holds, e.g. a fixed maximal depth for the tree or a lower bound wrt. number of samples in each terminal region.
+%TODO: "Trees are complex and therefore prone to overfitting"
 
-Having found the optimal split variable and split threshold, this procedure is repeated for each terminal region.
-%TODO: When does algorithm terminate? 
-Knowing how CART builds regression trees, we now advance to tree-based ensemble learners which create ensembles of decision trees in their own ways each.
-Two different approaches of ensemble learning are \textbf{bagging} and \textbf{boosting}. Bagging, shorthand for \textit{bootstrap aggregating}, creates bootstrapped datasets of the training data, fits a learner to each bootstrapped set and aggregates all learners.
+Knowing how CART builds regression trees, we now can advance to tree-based ensemble learners which create ensembles of regression trees in their own ways respectively.
+The two ensemble learning approaches relevant for this work are \textbf{bagging}, , shorthand for \textit{bootstrap aggregating}, and \textbf{boosting}. 
+Algorithms belonging to bagging take the average of all hypotheses fitted to their corresponding bootstrap samples which results in overall lower variance due to the strong law of large numbers, whereas boosting methods use gradient descent steps.
 
-%Why this works
-%Introduction RF
-%Detailed explanation of algorithm  
 
-Boosting. 
-This paper includes Random Forests and GBDTs in its comparison, since we found them to be very present in current research.  
 
-%Unterschied Bagging Boosting
 
 
 %Gradient Boosting Trees einleiten
