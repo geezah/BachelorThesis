@@ -1,6 +1,13 @@
 \chapter{Problem formulation}
 
-This chapter gives a short overview of the RMDPEAT introduced in \cite{Hildebrandt2020_EAT}. The RMDPEAT combines the dynamic pick-up and delivery problem presented in \cite{UlmerRMDP} with arrival time estimation and hence accounts for both processes. The integration of these fields is important since it opens up the possibility for customers to choose a preferred restaurant or none at all based on estimated arrival times. We will use the route based markov decision process model notation.
+This chapter gives a short overview of the RMDPEAT introduced in \cite{Hildebrandt2020_EAT} and then formulate the EAT component in detail. The RMDPEAT combines the dynamic pick-up and delivery problem presented in \cite{UlmerRMDP} with arrival time estimation and hence accounts for both processes. The extension of the RMDP with EAT is important since customer preferences are now taken into account. For a detailed route-based Markov decision process-model of the RMDPEAT, the interested reader is referred to §A.1 in the Appendix.
+
+\section{RMDPEAT} 
+
+
+
+
+a decision epoch $ k $ occurs whenever a customer requests arrival times. State $ S_k = (t_k, c_k, \mathcal{N}_k, \mathcal{R}_k, \Theta_k)$ contains the time point of the request $ t_k $, the set of customers that have requested service but have not been served yet, the restaurants and their workloads $ \mathcal{R_k} $ with $ r \in \mathcal{R_k} $, and the set of planned routes $ \Theta_k $. A decision $ x $ determines 
 
 
 
@@ -12,5 +19,83 @@ This chapter gives a short overview of the RMDPEAT introduced in \cite{Hildebran
 
 
 
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
