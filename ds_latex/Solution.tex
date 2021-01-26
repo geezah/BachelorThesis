@@ -8,14 +8,13 @@ Section 4.3 presents feature selection techniques applied in the computational s
 Section 4.4 defines the process by which we evaluate the models in order to assess their quality.
 
 \section{Motivation}
-
-- Why machine learning --> Why offline supervised learning 
+From the literature review it has already become apparent that supervised learning is a common way to go. But why is this the case? 
 \newline
 - Why bother comparing different methods 
 
 \section{Algorithms}
 
-This section shortly introduces the statistical framework of supervised learning (\cite{SLFoundations}) and then proceeds with the detailed examination of how each approach and algorithm included in our comparison, namely linear models, tree-based ensembles and neural networks, function (\cite{friedman2001elements}).
+This section shortly introduces the statistical framework of supervised learning \citep{SLFoundations} and then proceeds with the detailed examination of how each approach and algorithm included in our comparison, namely linear models, tree-based ensembles and neural networks, function \citep{friedman2001elements}.
 
 As inputs, supervised learning algorithms receive \textbf{training data} in form of a finite set $ S = \{({x}_{2}, y_2), ({x}_{2}, y_2), \dots, ({x}_{n}, y_n)\}$ of N pairs from $ \mathcal{X} \times \mathcal{Y} $ where $ x_i $ is a \textbf{sample} described by $ p $ features, and is associated to it's corresponding \textbf{label} $ y_i $.
 They return a \textbf{hypothesis} $ h: \mathcal{X} \to \mathcal{Y} $ that aims to predict the corresponding label $ y \in Y $ for any $ x \in X $, but especially for unseen samples or i.e. \textbf{test data} $ x \notin S $.
@@ -25,7 +24,7 @@ Thus, $ h(x) $ can be treated as a random variable being conditionally distribut
 The prediction accuracy of $ h $ is measured with a  \textbf{loss function} $ L : Y \times Y \to \mathbb{R}^{\geq 0}$.
 For a given pair $ ({x}_i, y_i) $, the loss function $ L(y_i, \hat{y}_i) $ represents how far a prediction $ \hat{y_i} $ for the i-th sample $ x_i $ is away from the actual corresponding label $ y_i $. 
 The average loss across all $ (x,y) \in S $ is called \textbf{empirical risk}.
-Thus, the goal of a supervised learning algorithm is to find the optimal hypothesis $ h^* $ for which the overall empirical risk is minimal (\cite{SLFoundations}): 
+Thus, the goal of a supervised learning algorithm is to find the optimal hypothesis $ h^* $ for which the overall empirical risk is minimal: 
 \begin{equation}
 	h^* = \argmin_{h \in H} \dfrac{1}{n} \sum_{i=1}^{n} L(h(x_i), y_i).
 \end{equation}
@@ -38,6 +37,8 @@ Poor predictions on both the training and test data indicate that a model is und
 In supervised learning, this is known as the \textbf{bias-variance tradeoff}. 
 A overfitted model is low in bias and high in variance, whereas the same goes vice versa for underfitted models. This dilemma is known as the \textbf{bias-variance tradeoff}. Models high in bias and low in variance are rather simple, e.g. linear regression models. Due to models low in bias and high in variance being able to capture rather complex patterns, they tend to also learn the noise in the training data. 
 The key challenge therefore lies in finding a model balancing this tradeoff well and thus having good prediction quality especially on test data. 
+
+For that reason, we consider diverse models covering the wide spectrum of model complexities.
  
 \subsection{Linear Models}
 
@@ -46,11 +47,18 @@ Let $ \textbf{X}^{T} = (X_1, X_2, \dots, X_p) $ denote the input matrix containi
 \begin{equation}
 h(X) = w_0 + \sum_{j=1}^{p} X_jw_j.
 \end{equation}
-Parameter $ w_0 $ represents the intercept. [Not finished]
+
+Parameter $ w_0 $ represents the intercept. A linear model assumes linearity in its parameters, whereas feature vectors $ X \in \textbf{X}^{T} $ can be of any form and arbitrarily transformed. 
+
+In case of a 1- or 2-dimensional feature space, we can visualize the regression model graphically as a straight line or hyperplane respectively in cartesian coordinate systems
+One popular way of approximating hypotheses in linear regression is \textit{least squares}, which seeks to find coefficients $ w^{*}_j $, $ j = 1, \dots, p $ that minimize the residual sum of squares across all N pairs the training set $ S $:
+\begin{equation}
+\argmin_{w} \sum_{i=1}^{N}(y_i - w_0 - \sum_{j=1}^{p} x_{ij}w_j)^2 
+\end{equation}
 
 \subsection{Tree-based ensembles}
 
-As shown in the literature review, tree-based ensembles like GBDTs and Random Forests are popular in the field of arrival time estimation. Behind ensemble learning lies the idea that so called \textit{base learners} (synonym to \textit{model} or \textit{hypothesis}) produce rather inaccurate results on their own, but form an accurate prediction model when they are combined. For tree-based ensembles, decision trees are used as base learners. 
+As shown in the literature review, tree-based ensembles like GBDTs and Random Forests are popular in the field of arrival time estimation. Ensemble learning is motivated by the idea that so called \textit{base learners} (synonym to \textit{model} or \textit{hypothesis}) produce rather inaccurate results on their own, but form an accurate prediction model when they are combined. For tree-based ensembles, decision trees are used as base learners. 
 Generally speaking, decision trees partition the feature space into distinct regions and then, in the case of regression, fit a real-valued prediction to each region. 
 A single decision tree is given by
 \begin{equation}
@@ -127,13 +135,13 @@ TODO: Explain shortcomings of traditional GBDT and explain why lightgbm implemen
 	\centering
 	\includegraphics[width=0.5\linewidth]{../simplenn.png}
 	\caption{Our neural network architecture to estimate arrival times: a single layer perceptron.}
-	\label{fig:meine-grafik}
+	\label{fig:nnarchitecture}
 \end{figure}
 
 
 \section{Feature Selection}
 
-As shown, researchers used different feature selection methods. A majority of the presented papers crafted their features manually relying on domain expertise, whereas others (e.g \cite{Siripanpornchana2016_AnnWithDbnFS} and \cite{Huang2018_GBDT}) used representation learning techniques.
+As shown, researchers use different feature selection methods. A majority of the presented papers crafts features manually relying on domain expertise, whereas others (e.g \cite{Siripanpornchana2016_AnnWithDbnFS} and \cite{Huang2018_GBDT}) used representation learning techniques.
 \newline
 TODO: Manual feature selection
 \newline 
