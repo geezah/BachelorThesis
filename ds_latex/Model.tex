@@ -6,7 +6,7 @@ This chapter gives a short overview of the RMDPEAT introduced in \cite{Hildebran
 
 \section{RMDPEAT} 
 
-
+According to the Dynamic vehicle routing taxonomy introduced in \cite{psaraftis}, the RMDPEAT 
 A decision epoch $ k $ occurs whenever a customer requests arrival times. 
 State $ S_k = (t_k, c_k, \mathcal{N}_k, \mathcal{R}_k, \Theta_k)$ contains the time point of the request $ t_k $, the set of customers $ \mathcal{N_k} $ that have requested service but have not been served yet, the restaurants and their workloads $ \mathcal{R}_k $ described by a location, the queue of requested meals to prepare and the preparation start time, and the set of planned routes $ \Theta_k $ given by a sequence of pickup and delivery actions which in turn are given by an origin, destination, the time when the pickup or delivery action is started and the duration of the action. 
 A decision determines the set of planned routes $ \Theta_{ik} $ first and then estimates arrival times $ X_{ik} := X (S_k \cup \Theta_{ik}) \in \mathbb{R}$ for each restaurant $ i = 1, \dots, |\mathcal{R}_k| $.
