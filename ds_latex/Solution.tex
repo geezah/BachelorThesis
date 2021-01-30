@@ -36,7 +36,7 @@ In supervised learning, this is known as the \textbf{bias-variance tradeoff}.
 A overfitted model is low in bias and high in variance, whereas the same goes vice versa for underfitted models. This dilemma is known as the \textbf{bias-variance tradeoff}. Models high in bias and low in variance are rather simple, e.g. linear regression models. Due to models low in bias and high in variance being able to capture rather complex patterns, they tend to also learn the noise in the training data. 
 The key challenge therefore lies in finding a model balancing this tradeoff well and thus having good prediction quality especially on test data. 
 
-For that reason, we consider diverse models covering the wide spectrum of model complexities.
+For that reason, we consider diverse models covering the wide spectrum of model complexities. In the following subsections, we will present different supervised learning model types we consider for our comparison, namely linear models, tree-based ensembles and neural networks, and detail how each algorithm functions.
  
 \subsection{Linear Models}
 
@@ -48,8 +48,13 @@ h(X) = w_0 + \sum_{j=1}^{p} X_jw_j.
 
 Parameter $ w_0 $ represents the intercept. A linear model assumes linearity in its parameters, whereas feature vectors $ X \in \textbf{X}^{T} $ can be of any form and arbitrarily transformed. 
 
-In case of a 1- or 2-dimensional feature space, we can visualize the regression model graphically as a straight line or hyperplane respectively in cartesian coordinate systems
-One popular way of approximating hypotheses in linear regression is \textit{least squares}, which seeks to find coefficients $ w^{*}_j $, $ j = 1, \dots, p $ that minimize the residual sum of squares across all N pairs the training set $ S $:
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{../Implementation/Plots/linear_reg_example.png}
+	\caption{}
+	\label{fig:linearreg}
+\end{figure}
+One popular way of approximating hypotheses in linear regression is \textit{least squares}, which seeks to find coefficients $ w^{*}_j $, $ j = 1, \dots, p $ that minimize the squared differences across all N pairs the training set $ S $:
 \begin{equation}
 \argmin_{w} \sum_{i=1}^{N}(y_i - w_0 - \sum_{j=1}^{p} x_{ij}w_j)^2 
 \end{equation}
@@ -121,10 +126,8 @@ Given this, we now update the former weak learner with the new one:
 \begin{equation}
 	h_m(x) = h_{m-1}(x) + \alpha \sum_{j=1}^{J_m} \hat{c}_{m}I(x \in R_{jm})
 \end{equation}
-where $ \alpha $ is the learning rate, and $ I(\cdot) $ is the indicator function.
-\newline
-\newline
-TODO: Explain shortcomings of traditional GBDT and explain why lightgbm implementation is used (e.g. leaf-wise tree growth) (maybe in detail?)
+where $ \alpha $ is the learning rate, and $ I(\cdot) $ is the indicator function. 
+
 
 \subsection{Neural Networks for regression}
 

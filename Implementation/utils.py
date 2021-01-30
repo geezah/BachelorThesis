@@ -60,7 +60,7 @@ class DataSplit:
 
 
 class ETDData(Dataset):
-    def __init__(self, data, feature_list):
+    def __init__(self, data, feature_list, objective):
         """
         Args:
             csv_path (string): path to csv file
@@ -73,11 +73,19 @@ class ETDData(Dataset):
             self.samples = np.asarray(self.data[feature_list])
         else:
             self.samples = np.asarray(self.data.loc[:, self.data.columns != 'atd'])
-        # Set up labels 
-        self.labels = np.asarray(self.data['atd'] - self.data['etd'])
-        # Normalize
+	#Normalize 
         self.normalized_samples = (self.samples - np.mean(self.samples, axis=0)) / np.std(self.samples, axis=0)
-
+        
+        # Set up labels
+        if objective == "ae":
+            self.labels = np.asarray(self.normalized_samples)
+            print(f"Label shape: {self.labels.shape[1]}")
+            print("Ain't no complaints")
+        else:
+            self.labels = np.asarray(self.data['atd'] - self.data['etd'])
+		
+        
+ 
     def __len__(self):
         return len(self.data)
 
@@ -89,6 +97,7 @@ class ETDData(Dataset):
         return sample, label
 
 
+    
 class EarlyStopping:
     """Early stops the training if validation loss doesn't improve after a given patience."""
     def __init__(self, patience=7, verbose=False):
