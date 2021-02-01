@@ -2,33 +2,34 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
-class CancelOut(nn.Module):
-    '''
-    CancelOut Layer
-    
-    x - an input data (vector, matrix, tensor)
-    '''
-
-    def __init__(self, inp, *kargs, **kwargs):
-        super(CancelOut, self).__init__()
-        self.weights = nn.Parameter(torch.zeros(inp, requires_grad=True) + 4)
+class Autoencoder(torch.nn.Module):
+    def __init__(self, n_features, n_hidden, n_code):
+        super(Autoencoder, self).__init__()
+        self.name = "ae"
+        self.view = n_features
+        self.hidden_enc = nn.Linear(n_features, n_hidden)
+        self.encode = nn.Linear(n_hidden, n_code)
+        self.hidden_dec = nn.Linear(n_code, n_hidden)
+        self.decode = nn.Linear(n_hidden, n_features)
 
     def forward(self, x):
-        return x * torch.sigmoid(self.weights.float())
+        x = F.leaky_relu(self.hidden_enc(x))
+        x = F.leaky_relu(self.encode(x))
+        x = F.leaky_relu(self.hidden_dec(x))
+        x = self.decode(x)
 
-
-class Model(torch.nn.Module):
+        return x
+    
+class Regressor(torch.nn.Module):
     def __init__(self, n_features, n_hidden, n_output):
-        super(Model, self).__init__()
-        self.cancelOut = CancelOut(n_features)
+        super(Regressor, self).__init__()
+        self.name = "regressor"
+        self.view = n_output
         self.hidden = nn.Linear(n_features, n_hidden)
         self.predict = nn.Linear(n_hidden, n_output)
-
+    
     def forward(self, x):
-        x = self.cancelOut(x)
-        x = F.relu(self.hidden(x))
+        x = F.leaky_relu(self.hidden(x))
         x = self.predict(x)
 
         return x
-
