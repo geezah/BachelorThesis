@@ -9,8 +9,7 @@ Section 4.2 focusses on feature selection techniques applied in our computationa
 
 \section{Design of Experiments}
 
-We aim to minimize the difference between actual and estimated arrival time. 
-
+The primary goal of this study is to find the most suitable algorithm for the given arrival time estimation. Although model accuracy is our 
 \section{Supervised Models}
 
 This section shortly introduces the statistical framework of supervised learning \citep{SLFoundations} and then proceeds with the detailed examination of how each approach and algorithm included in our comparison, namely linear models, tree-based ensembles and neural networks, function \citep{friedman2001elements}.
@@ -60,7 +59,7 @@ One popular way of approximating hypotheses in linear regression is \textit{leas
 \argmin_{w} \sum_{i=1}^{N}(y_i - w_0 - \sum_{j=1}^{p} x_{ij}w_j)^2 
 \end{equation}
 
-\subsection{Tree-based ensembles}
+\subsection{Tree-based Ensembles}
 
 As shown in the literature review, tree-based ensembles like GBDTs and Random Forests are popular in the field of arrival time estimation. Ensemble learning is motivated by the idea that so called \textit{base learners} (synonym to \textit{model} or \textit{hypothesis}) produce rather inaccurate results on their own, but form an accurate prediction model when they are combined. For tree-based ensembles, decision trees are used as base learners. 
 Generally speaking, decision trees partition the feature space into distinct regions and then, in the case of regression, fit a real-valued prediction to each region. 
@@ -130,7 +129,7 @@ Given this, we now update the former weak learner with the new one:
 where $ \alpha $ is the learning rate, and $ I(\cdot) $ is the indicator function. 
 
 
-\subsection{Neural Networks for regression}
+\subsection{Neural Networks for Regression}
 
 
 \begin{figure}[h]
