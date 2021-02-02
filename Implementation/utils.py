@@ -73,9 +73,10 @@ class ETDData(Dataset):
             self.samples = np.asarray(self.data[feature_list])
         else:
             self.samples = np.asarray(self.data.loc[:, self.data.columns != 'atd'])
-	#Normalize 
-        #self.normalized_samples = (self.samples - np.mean(self.samples, axis=0)) / np.std(self.samples, axis=0)
-        self.normalized_samples = (self.samples - self.samples.min(axis=1)) / (self.samples - self.samples.max(axis=1))
+	    
+        #Normalize 
+        self.normalized_samples = (self.samples - np.mean(self.samples, axis=0)) / np.std(self.samples, axis=0)
+        self.normalized_samples = np.nan_to_num(self.normalized_samples)
         # Set up labels
         if objective == "ae":
             self.labels = np.asarray(self.normalized_samples)
