@@ -4,13 +4,14 @@
 This chapter presents our methodogolical approach and describes its elements in detail.
 Section 4.1 gives an overview of the methodological approach used to evaluate and compare the models. 
 Section 4.2 gives an introduction to supervised learning and presents the different models considered in the comparison in detail.
-Section 4.2 describes how we will optimize model hyperparameters. 
-Section 4.2 focusses on feature selection techniques applied in our computational study.
+Section 4.3 describes how we will optimize model hyperparameters. 
+Section 4.4 focusses on feature selection techniques applied in our computational study.
 
 \section{Design of Experiments}
 
-The primary goal of this study is to find the most suitable algorithm for the given arrival time estimation. Although model accuracy is our 
-\section{Supervised Models}
+The primary goal of this study is to find the most suitable model for the given arrival time estimation and analyze each considered model. To attain the best possible solution to this problem, it is necessary to examinate different alternatives since the one model that does the best job on any problem does not exist as shown in the literature review. While \cite{Zhu2020_OFCTE_DL} use deep learning as a means of estimating arrival respectively delivery times for restaurant meal delivery, \cite{Hildebrandt2020_EAT} turn to GBDTs on a quite similar problem setting. Further challenge lies in the selection of a well suited data model for the given problem. As we will show later on, feature selection plays a crucial role for model performance. 
+
+\section{Algorithms of Supervised Learning}
 
 This section shortly introduces the statistical framework of supervised learning \citep{SLFoundations} and then proceeds with the detailed examination of how each approach and algorithm included in our comparison, namely linear models, tree-based ensembles and neural networks, function \citep{friedman2001elements}.
 
@@ -142,26 +143,14 @@ where $ \alpha $ is the learning rate, and $ I(\cdot) $ is the indicator functio
 
 \section{Feature Selection}
 
-As shown, researchers use different feature selection methods. A majority of the presented papers crafts features manually relying on domain expertise, whereas others (e.g \cite{Siripanpornchana2016_AnnWithDbnFS} and \cite{Huang2018_GBDT}) used representation learning techniques.
+A significant role for the success of machine learning models in general plays the data we gather and how we make sense of it - i.e. how we turn raw data into informative features - since machine learning models can only learn from the data model they receive for the learning process. We will showcase the significance of a well chosen data model by an example. FIGURE depicts the performance of the same linear regression model on two different data models constructed randomly for a regression problem. 
 \newline
-TODO: Manual feature selection
-\newline 
-TODO: Autoencoder
 \newline
-Maybe-TODO: Other feature selection methods, e.g. PCA?
+[FEATURE SELECTION EXAMPLE] 
+\newline
+\newline
+Therefore, selecting and engineering informative features is not to be underestimated. 
 
 \section{Hyperparameter Optimization}
 
-\section{Evaluation} 
-For accuracy: MSE 
-\newline
-Hyperparameter importance analysis for robustness
-\newline
-Noise einführen 
---> Wie reagiert Algorithmus auf Noise?
-\newline
-Anzahl der Trainingsdaten 
---> Wieviele Samples bis Konvergenz?
-\newline
-Feature Selection
---> Welches Features optimieren entsprechendes Modell bzgl. Runtime und Accuracy?
+
