@@ -15,6 +15,7 @@ The primary goal of this study is to find the most suitable model for the given 
 
 This section shortly introduces the statistical framework of supervised learning \citep{SLFoundations} and then proceeds with the detailed examination of how each approach and algorithm included in our comparison, namely linear models, tree-based ensembles and neural networks, function \citep{friedman2001elements}.
 
+\section{Framework}
 As inputs, supervised learning algorithms receive \textbf{training data} in form of a finite set $ S = \{({x}_{2}, y_2), ({x}_{2}, y_2), \dots, ({x}_{n}, y_n)\}$ of N pairs from $ \mathcal{X} \times \mathcal{Y} $ where $ x_i $ is a \textbf{sample} described by $ p $ features, and is associated to it's corresponding \textbf{label} $ y_i $.
 They return a \textbf{hypothesis} $ h: \mathcal{X} \to \mathcal{Y} $ that aims to predict the corresponding label $ y \in Y $ for any $ x \in X $, but especially for unseen samples or i.e. \textbf{test data} $ x \notin S $.
 We further assume a joint probability distribution $ P $ over $ \mathcal{X} $ and $ \mathcal{Y} $ each pair is identically and independently distributed according to. 
@@ -32,30 +33,23 @@ Predictions can generally be made for either \textbf{regression} or \textbf{clas
 While regression is used to predict continuous targets $ Y = \mathbb{R} $, classification predicts discrete $ Y $. The arrival time estimation problem is a regression task since we are estimating (continuous) arrival times.
 Although various supervised learning models use different mathematical procedures to predict targets, all of them follow the principle of induction, meaning that general rules are inductively inferred from training data. This is also called \textbf{generalization}.  
 In order for a model to generalize well, two phenomena have to be avoided: \textbf{Underfitting} and \textbf{Overfitting}. 
-Poor predictions on both the training and test data indicate that a model is underfitted, whereas an overfitted model is characterized by very good prediction accuracy for samples $ x \in S $, but poor accuracy on test data.
+Poor predictions on both the training and test data indicate that a model is underfitted. Very good prediction accuracy for training samples $ x \in S $, but poor accuracy on test samples $ x \notin S $ indicate that a model is overfitted.
 In supervised learning, this is known as the \textbf{bias-variance tradeoff}. 
-A overfitted model is low in bias and high in variance, whereas the same goes vice versa for underfitted models. This dilemma is known as the \textbf{bias-variance tradeoff}. Models high in bias and low in variance are rather simple, e.g. linear regression models. Due to models low in bias and high in variance being able to capture rather complex patterns, they tend to also learn the noise in the training data. 
-The key challenge therefore lies in finding a model balancing this tradeoff well and thus having good prediction quality especially on test data. 
+An overfitted model is characterized by rather being low in bias and high in variance, whereas the same goes vice versa for underfitted models. Models high in bias and low in variance are rather simple, e.g. linear regression models. Due to models low in bias and high in variance being able to capture rather complex patterns, they tend to also learn the noise in the training data. 
+The key challenge therefore lies in finding a model balancing this tradeoff well and thus having good prediction quality especially on test data. ¸
 
-For that reason, we consider diverse models covering the wide spectrum of model complexities. In the following subsections, we will present different supervised learning model types we consider for our comparison, namely linear models, tree-based ensembles and neural networks, and detail how each algorithm functions.
+For that reason, we consider diverse models covering the wide spectrum of model complexities. In the following subsections, we will present different supervised learning model types we consider in our experiment, namely linear models, tree-based ensembles and neural networks, and specify how each algorithm functions.
  
 \subsection{Linear Models}
 
 Linear regression models assume that every $ y $ can be predicted with a linear combination of the inputs. 
 Let $ \textbf{X}^{T} = (X_1, X_2, \dots, X_p) $ denote the input matrix containing $ p $ column vectors with N components each, and $ \hat{Y} = (y_1, y_2, \dots, y_n)$ the column vector with the corresponding real-valued outputs. A linear regression model is a linear combination of parameters $ w $ and column vectors $ X $:
 \begin{equation}
-h(X) = w_0 + \sum_{j=1}^{p} X_jw_j.
+h(X) = w_0 + \sum_{j=1}^{p} X_jw_j
 \end{equation}
 
-Parameter $ w_0 $ represents the intercept. A linear model assumes linearity in its parameters, whereas feature vectors $ X \in \textbf{X}^{T} $ can be of any form and arbitrarily transformed. 
-
-\begin{figure}
-	\centering
-	\includegraphics[width=0.7\linewidth]{../Implementation/Plots/linear_reg_example.png}
-	\caption{}
-	\label{fig:linearreg}
-\end{figure}
-One popular way of approximating hypotheses in linear regression is \textit{least squares}, which seeks to find coefficients $ w^{*}_j $, $ j = 1, \dots, p $ that minimize the squared differences across all N pairs the training set $ S $:
+with parameter $ w_0 $ representing the intercept. The feature vectors $ X \in \textbf{X}^{T} $ can be of any form and be arbitrarily transformed since linear models only assume linearity in their parameters, not in their inputs.
+A common method of approximating the hypothesis in linear regression is \textit{least squares}, which seeks to find coefficients $ w^{*}_j $, $ j = 1, \dots, p $ that minimize the squared differences across all N pairs the training set $ S $:
 \begin{equation}
 \argmin_{w} \sum_{i=1}^{N}(y_i - w_0 - \sum_{j=1}^{p} x_{ij}w_j)^2 
 \end{equation}
