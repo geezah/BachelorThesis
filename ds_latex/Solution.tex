@@ -11,11 +11,11 @@ Section 4.4 focusses on feature selection techniques applied in our computationa
 
 The primary goal of this study is to find the most suitable model for the given arrival time estimation and analyze each considered model. To attain the best possible solution to this problem, it is necessary to examinate different alternatives since the one model that does the best job on any problem does not exist as shown in the literature review. While \cite{Zhu2020_OFCTE_DL} use deep learning as a means of estimating arrival respectively delivery times for restaurant meal delivery, \cite{Hildebrandt2020_EAT} turn to GBDTs on a quite similar problem setting. Further challenge lies in the selection of a well suited data model for the given problem. As we will show later on, feature selection plays a crucial role for model performance. 
 
-\section{Algorithms of Supervised Learning}
+\section{Algorithms}
 
-This section shortly introduces the statistical framework of supervised learning \citep{SLFoundations} and then proceeds with the detailed examination of how each approach and algorithm included in our comparison, namely linear models, tree-based ensembles and neural networks, function \citep{friedman2001elements}.
+This section shortly introduces the statistical framework of supervised learning and then proceeds with the detailed examination of how each approach and algorithm included in our comparison, namely linear models, tree-based ensembles and neural networks, function. 
 
-\section{Framework}
+\subsection{Framework}
 As inputs, supervised learning algorithms receive \textbf{training data} in form of a finite set $ S = \{({x}_{2}, y_2), ({x}_{2}, y_2), \dots, ({x}_{n}, y_n)\}$ of N pairs from $ \mathcal{X} \times \mathcal{Y} $ where $ x_i $ is a \textbf{sample} described by $ p $ features, and is associated to it's corresponding \textbf{label} $ y_i $.
 They return a \textbf{hypothesis} $ h: \mathcal{X} \to \mathcal{Y} $ that aims to predict the corresponding label $ y \in Y $ for any $ x \in X $, but especially for unseen samples or i.e. \textbf{test data} $ x \notin S $.
 We further assume a joint probability distribution $ P $ over $ \mathcal{X} $ and $ \mathcal{Y} $ each pair is identically and independently distributed according to. 
@@ -38,22 +38,25 @@ In supervised learning, this is known as the \textbf{bias-variance tradeoff}.
 An overfitted model is characterized by rather being low in bias and high in variance, whereas the same goes vice versa for underfitted models. Models high in bias and low in variance are rather simple, e.g. linear regression models. Due to models low in bias and high in variance being able to capture rather complex patterns, they tend to also learn the noise in the training data. 
 The key challenge therefore lies in finding a model balancing this tradeoff well and thus having good prediction quality especially on test data. ¸
 
-For that reason, we consider diverse models covering the wide spectrum of model complexities. In the following subsections, we will present different supervised learning model types we consider in our experiment, namely linear models, tree-based ensembles and neural networks, and specify how each algorithm functions.
+For that reason, we consider diverse models covering the wide spectrum of model complexities.
  
 \subsection{Linear Models}
 
-Linear regression models assume that every $ y $ can be predicted with a linear combination of the inputs. 
-Let $ \textbf{X}^{T} = (X_1, X_2, \dots, X_p) $ denote the input matrix containing $ p $ column vectors with N components each, and $ \hat{Y} = (y_1, y_2, \dots, y_n)$ the column vector with the corresponding real-valued outputs. A linear regression model is a linear combination of parameters $ w $ and column vectors $ X $:
-\begin{equation}
+Linear regression models assume that every $ y $ can be predicted with a linear combination of inputs, i.e. the training data $ S $. In the following, we will concisely explain how linear regression works. For further explanations, the reader is refered to \cite{friedman2001elements}.
+
+Let $ \textbf{X}^{T} = (X_1, X_2, \dots, X_p) $ denote the input matrix containing $ p $ column vectors with N components each, and $ \hat{Y} = (y_1, y_2, \dots, y_n)$ the column vector with the corresponding real-valued outputs. A simple linear regression model is a linear combination of coefficients $ \mathbf{w} = (w_0, \dots, w_p) $ and column vectors $ X $:
+\begin{equation}\label{eq:linearmodel}
 h(X) = w_0 + \sum_{j=1}^{p} X_jw_j
 \end{equation}
-
-with parameter $ w_0 $ representing the intercept. The feature vectors $ X \in \textbf{X}^{T} $ can be of any form and be arbitrarily transformed since linear models only assume linearity in their parameters, not in their inputs.
-A common method of approximating the hypothesis in linear regression is \textit{least squares}, which seeks to find coefficients $ w^{*}_j $, $ j = 1, \dots, p $ that minimize the squared differences across all N pairs the training set $ S $:
-\begin{equation}
-\argmin_{w} \sum_{i=1}^{N}(y_i - w_0 - \sum_{j=1}^{p} x_{ij}w_j)^2 
+with coefficient $ w_0 $ representing the intercept. The feature vectors $ X \in \textbf{X}^{T} $ can be of any form and be arbitrarily transformed since linear models only assume linearity in their coefficients, and not in their inputs.
+A common method of approximating the hypothesis in linear regression is \textit{least squares}, which seeks to find parameters that minimize the squared differences across all N pairs the training set $ S $:
+\begin{equation}\label{eq:argminlinear}
+\argmin_{w} \sum_{i=1}^{N}(y_i - w_0 - \sum_{j=1}^{p} x_{ij}w_j)^2. 
 \end{equation}
+The coefficients resulting from the least squares minimization in \ref{eq:argminlinear} are then employed in \ref{eq:linearmodel}, which can be used to predict labels for given samples. 
 
+
+We will use the linear regression algorithm implemented in \textit{Scikit-Learn}, a library providing numerous machine learning algorihms written in Python designed by \cite{scikit-learn}.
 \subsection{Tree-based Ensembles}
 
 As shown in the literature review, tree-based ensembles like GBDTs and Random Forests are popular in the field of arrival time estimation. Ensemble learning is motivated by the idea that so called \textit{base learners} (synonym to \textit{model} or \textit{hypothesis}) produce rather inaccurate results on their own, but form an accurate prediction model when they are combined. For tree-based ensembles, decision trees are used as base learners. 
