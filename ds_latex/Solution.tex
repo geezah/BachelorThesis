@@ -19,8 +19,7 @@ This section shortly introduces the statistical framework of supervised learning
 As inputs, supervised learning algorithms receive \textbf{training data} in form of a finite set $ S = \{({x}_{2}, y_2), ({x}_{2}, y_2), \dots, ({x}_{n}, y_n)\}$ of N pairs from $ \mathcal{X} \times \mathcal{Y} $ where $ x_i $ is a \textbf{sample} described by $ p $ features, and is associated to it's corresponding \textbf{label} $ y_i $.
 They return a \textbf{hypothesis} $ h: \mathcal{X} \to \mathcal{Y} $ that aims to predict the corresponding label $ y \in Y $ for any $ x \in X $, but especially for unseen samples or i.e. \textbf{test data} $ x \notin S $.
 We further assume a joint probability distribution $ P $ over $ \mathcal{X} $ and $ \mathcal{Y} $ each pair is identically and independently distributed according to. 
-This assumption allows us to take uncertainties of predictions in form of noise in the training data into account. 
-Thus, $ h(x) $ can be treated as a random variable being conditionally distributed with $ P(y | x) $ for a given $ x $, and not as a deterministic function of $ x $.
+Thus, $ h(x) $ can be treated as a random variable being conditionally distributed with $ P(y | x) $ for a given $ x $, and not as a deterministic function of $ x $. 
 The prediction accuracy of $ h $ is measured with a  \textbf{loss function} $ L : Y \times Y \to \mathbb{R}^{\geq 0}$.
 For a given pair $ ({x}_i, y_i) $, the loss function $ L(y_i, \hat{y}_i) $ represents how far a prediction $ \hat{y_i} $ for the i-th sample $ x_i $ is away from the actual corresponding label $ y_i $. 
 The average loss across all $ (x,y) \in S $ is called \textbf{empirical risk}.
@@ -34,11 +33,11 @@ While regression is used to predict continuous targets $ Y = \mathbb{R} $, class
 Although various supervised learning models use different mathematical procedures to predict targets, all of them follow the principle of induction, meaning that general rules are inductively inferred from training data. This is also called \textbf{generalization}.  
 In order for a model to generalize well, two phenomena have to be avoided: \textbf{Underfitting} and \textbf{Overfitting}. 
 Poor predictions on both the training and test data indicate that a model is underfitted. Very good prediction accuracy for training samples $ x \in S $, but poor accuracy on test samples $ x \notin S $ indicate that a model is overfitted.
-In supervised learning, this is known as the \textbf{bias-variance tradeoff}. 
-An overfitted model is characterized by rather being low in bias and high in variance, whereas the same goes vice versa for underfitted models. Models high in bias and low in variance are rather simple, e.g. linear regression models. Due to models low in bias and high in variance being able to capture rather complex patterns, they tend to also learn the noise in the training data. 
-The key challenge therefore lies in finding a model balancing this tradeoff well and thus having good prediction quality especially on test data. ¸
+In supervised learning, this dilemma is known as the \textbf{bias-variance tradeoff}. 
+An overfitted model is characterized by rather being low in bias and high in variance, whereas the same goes vice versa for underfitted models. Models high in bias and low in variance are rather simple, but cannot capture complex mappings due to high bias, e.g. linear models. On the other hand, models low in bias and high in variance are able to capture complex patterns in the data which is the reason why they fit given training data $ S $ very well. The problem with models high in variance arises when predictions are performed on independent samples $ x \notin S $, because the better the model is fitted to $ S $, the higher becomes the variability of prediction performance on independent samples. 
+The key challenge therefore lies in finding a model balancing this tradeoff well and thus having good and consistent prediction quality especially on test data.
 
-For that reason, we consider diverse models covering the wide spectrum of model complexities.
+For that reason, we consider diverse models covering the wide spectrum of model complexities to discover the suitable options for the EAT. 
  
 \subsection{Linear Models}
 
@@ -48,18 +47,19 @@ Let $ \textbf{X}^{T} = (X_1, X_2, \dots, X_p) $ denote the input matrix containi
 \begin{equation}\label{eq:linearmodel}
 h(X) = w_0 + \sum_{j=1}^{p} X_jw_j
 \end{equation}
-with coefficient $ w_0 $ representing the intercept. The feature vectors $ X \in \textbf{X}^{T} $ can be of any form and be arbitrarily transformed since linear models only assume linearity in their coefficients, and not in their inputs.
+with coefficient $ w_0 $ representing the bias term. The feature vectors $ X \in \textbf{X}^{T} $ can be of any form and be arbitrarily transformed since linear models only assume linearity in their coefficients, and not in their inputs.
 A common method of approximating the hypothesis in linear regression is \textit{least squares}, which seeks to find parameters that minimize the squared differences across all N pairs the training set $ S $:
 \begin{equation}\label{eq:argminlinear}
 \argmin_{w} \sum_{i=1}^{N}(y_i - w_0 - \sum_{j=1}^{p} x_{ij}w_j)^2. 
 \end{equation}
 The coefficients resulting from the least squares minimization in \ref{eq:argminlinear} are then employed in \ref{eq:linearmodel}, which can be used to predict labels for given samples. 
-
+Linear models are the better choice when it is known that the ground truth mapping between the independent and dependent variables of our model is linear since the model assumes linearity, is easy to implement and fast to train. The flipside of the coin is that more complex patterns in the can not be fully captured by linear models since it is always assumed that the underlying mapping of the given problem is linear which might not be the case for more complex scenarios. 
 
 We will use the linear regression algorithm implemented in \textit{Scikit-Learn}, a library providing numerous machine learning algorihms written in Python designed by \cite{scikit-learn}.
+
 \subsection{Tree-based Ensembles}
 
-As shown in the literature review, tree-based ensembles like GBDTs and Random Forests are popular in the field of arrival time estimation. Ensemble learning is motivated by the idea that so called \textit{base learners} (synonym to \textit{model} or \textit{hypothesis}) produce rather inaccurate results on their own, but form an accurate prediction model when they are combined. For tree-based ensembles, decision trees are used as base learners. 
+As shown in the literature review, tree-based ensembles like GBDTs and Random Forests are popular in the field of arrival time estimation. Ensemble learning is motivated by the idea that \textit{base learners} (synonym to \textit{model} or \textit{hypothesis}) produce rather inaccurate results on their own, but form an accurate prediction model when they are combined. For tree-based ensembles, decision trees are used as base learners. 
 Generally speaking, decision trees partition the feature space into distinct regions and then, in the case of regression, fit a real-valued prediction to each region. 
 A single decision tree is given by
 \begin{equation}
@@ -79,18 +79,19 @@ The algorithm seeks optimal $ j $ and $ s $ by finding constants that minimize t
 \begin{equation}\label{minjs}
 	\min_{j,s} \bigg [\min_{\hat{c}_1} \sum_{x_i \in R_1(j,s)} \dfrac{1}{2}(y_i - \hat{c}_{2})^2 + \min_{\hat{c}_2} \sum_{x_i \in R_{2}(j,s)} \dfrac{1}{2}(y_i - \hat{c}_{2})^2\bigg]
 \end{equation}
-Having found the optimal split variable and split threshold, this procedure is repeated for each terminal region until a termination condition holds, e.g. a fixed maximal depth for the tree or a lower bound wrt. number of samples in each terminal region.
-\newline
-TODO: Disadvantages of decision trees (e.g. prone to overfitting, not as accurate as ensembles)
+Having found the optimal split variable and split threshold, this procedure is repeated for each terminal region until a termination condition holds, e.g. a fixed maximal depth for the tree or a lower bound wrt. number of samples in each terminal region. 
 \newline
 \newline
-Knowing how CART builds regression trees, we now can advance to tree-based ensemble learning techniques which combine several regression trees to make predictions each in their own way.
-The two ensemble learning approaches relevant for this work are \textbf{bagging}, , shorthand for \textit{bootstrap aggregating}, and \textbf{boosting}. 
+TODO: Shortcomings of decision trees
+\newline
+\newline
+Understanding the greedy approach used to build regression trees, we now can advance to tree-based ensemble learning techniques which basically combines several regression trees to make predictions each in their own way. 
+The two ensemble learning approaches relevant for our work are \textbf{bagging}, shorthand for \textit{bootstrap aggregating}, and \textbf{boosting}. 
 Algorithms belonging to bagging first create bootstrap data sets $ S^{*} $ by randomly drawing samples with replacement from training data S, fit each $ S^{*b} $ a hypothesis $ h^{*b}(x) $ and take the average across all hypotheses as the bagging estimate: 
 \begin{equation}\label{average}
 	h_{bag}(x) = \dfrac{1}{B} \sum_{b=1}^{B} h^{*b}(x).
 \end{equation}
-Since decision trees are low in bias and high in variance due to their ability to capture complex mappings, averaging across all hypotheses reduces the variance because of the strong law of large numbers [<-- TODO: More detailed explanation].
+Since decision trees are low in bias and high in variance due to their ability to capture complex mappings, bagging is motivated by the idea that averaging across all base learners benefits from the strong law of large numbers and therefore leads to a reduction in variance. 
 Random Forests belong to the class of bagging algorithms and work as follows:
 For an arbitrarily chosen and fixed amount of estimators $ B \in \mathbb{N}$, we create bootstrap data sets $ S^{*b} $ with $ b = 1, \dots, B $ of size $ N $ from the training data $ S $. The b-th regression tree $ T_b $ is grown to $ S^{*b} $ by first selecting a subset of $ m $ features with $ m \leq p $, and then growing a regression tree according to CART as described above.
 Having grown each bootstrap data set $ S^{*b} $ its own regression tree $ T_b $, random forest for regression averages across all hypotheses of each regression tree by applying equation \ref{average} and returns
@@ -124,7 +125,9 @@ Given this, we now update the former weak learner with the new one:
 \begin{equation}
 	h_m(x) = h_{m-1}(x) + \alpha \sum_{j=1}^{J_m} \hat{c}_{m}I(x \in R_{jm})
 \end{equation}
-where $ \alpha $ is the learning rate, and $ I(\cdot) $ is the indicator function. 
+where $ \alpha $ is the learning rate, and $ I(\cdot) $ is the indicator function.
+Hence, we use the GBDT implemetation of \textit{lightGBM}.
+
 
 
 \subsection{Neural Networks for Regression}
@@ -140,12 +143,7 @@ where $ \alpha $ is the learning rate, and $ I(\cdot) $ is the indicator functio
 
 \section{Feature Selection}
 
-A significant role for the success of machine learning models in general plays the data we gather and how we make sense of it - i.e. how we turn raw data into informative features - since machine learning models can only learn from the data they receive for the learning process. Gerenally, we want to maximize the amount of informative features that predict our target comparably good while minimizing the amount of features we use at the same time. In addition, a data model that 
-\newline
-\newline
-[FEATURE SELECTION EXAMPLE] 
-\newline
-\newline
+A significant role for the success of machine learning models in general plays the data we gather and how we make sense of it - i.e. how we turn raw data into informative features - since machine learning models can only learn from the data they receive for the learning process. Gerenally, we want to maximize the amount of informative features that predict our target comparably good while minimizing the amount of features we use at the same time. 
 Therefore, selecting and engineering informative features is not to be underestimated. 
 
 \section{Hyperparameter Optimization}
