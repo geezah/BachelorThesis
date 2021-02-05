@@ -9,7 +9,9 @@ Section 4.4 focusses on feature selection techniques applied in our computationa
 
 \section{Design of Experiments}
 
-The primary goal of this study is to find the most suitable model for the given arrival time estimation and analyze each considered model. To attain the best possible solution to this problem, it is necessary to examinate different alternatives since the one model that does the best job on any problem does not exist as shown in the literature review. While \cite{Zhu2020_OFCTE_DL} use deep learning as a means of estimating arrival respectively delivery times for restaurant meal delivery, \cite{Hildebrandt2020_EAT} turn to GBDTs on a quite similar problem setting. Further challenge lies in the selection of a well suited data model for the given problem. As we will show later on, feature selection plays a crucial role for model performance. 
+The primary goal of this study is to find the most suitable model for the given arrival time estimation problem. To attain the best possible solution to this problem, it is necessary to examinate different alternatives since the one model that does the best job on any problem does not exist as shown in the literature review. While \cite{Zhu2020_OFCTE_DL} use deep learning as a means of estimating arrival respectively delivery times for restaurant meal delivery, \cite{Hildebrandt2020_EAT} turn to GBDTs on a quite similar problem setting, whereas \cite{Liu2018_LM_PLM} concluded that linear models are the better choice overall. For that reason, we will conduct experiments that will allow us to analyze the behaviour of the involved models.
+Further challenge lies in the selection of a well suited data model for the given problem which is highly non-trivial. 
+As we will show later on, feature selection plays a crucial role for model performance.
 
 \section{Algorithms}
 
@@ -133,17 +135,9 @@ Hence, we use the GBDT implemetation of \textit{lightGBM}.
 \subsection{Neural Networks for Regression}
 
 
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=0.5\linewidth]{../simplenn.png}
-	\caption{Our neural network architecture to estimate arrival times: a single layer perceptron.}
-	\label{fig:nnarchitecture}
-\end{figure}
-
-
 \section{Feature Selection}
 
-A significant role for the success of machine learning models in general plays the data we gather and how we make sense of it - i.e. how we turn raw data into informative features - since machine learning models can only learn from the data they receive for the learning process. Gerenally, we want to maximize the amount of informative features that predict our target comparably good while minimizing the amount of features we use at the same time. 
+A significant role for the success of machine learning models in general plays the data we gather and how we make sense of it - i.e. how we turn raw data into informative features - since machine learning models can only learn from the data they receive for the learning process. Gerenally, we want to maximize the amount of informative features that predict our target comparably good while minimizing the amount of features we use at the same time. High-dimensional feature spaces are not desired as training time exponentially increases and prediction performance decreases.
 Therefore, selecting and engineering informative features is not to be underestimated. 
 
 \section{Hyperparameter Optimization}
