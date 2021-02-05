@@ -1,13 +1,13 @@
+from functools import lru_cache
+
+import numpy as np
 import torch
 from torch.utils.data import Dataset, DataLoader, sampler
-import pandas as pd
-from functools import lru_cache
-import numpy as np
 
 
 class DataSplit:
 
-    def __init__(self, dataset, test_train_split=0.8, val_train_split=0.2, shuffle=False):
+    def __init__(self, dataset, test_train_split=0.8, val_train_split=0.0, shuffle=False, rows=None):
         self.dataset = dataset
 
         dataset_size = len(dataset)
@@ -17,8 +17,8 @@ class DataSplit:
         if shuffle:
             np.random.shuffle(self.indices)
 
-        self.train_indices, self.test_indices = self.indices[:test_split], self.indices[test_split:]
-        train_size = len(train_indices)
+        train_indices, self.test_indices = self.indices[:test_split], self.indices[test_split:]
+        train_size = rows if rows is not None else len(train_indices)
         validation_split = int(np.floor((1 - val_train_split) * train_size))
 
         self.train_indices, self.val_indices = train_indices[: validation_split], train_indices[validation_split:]
@@ -60,29 +60,33 @@ class DataSplit:
 
 
 class ETDData(Dataset):
-    def __init__(self, data, feature_list, objective):
+    def __init__(self, data, objective, feature_list=None):
         """
         Args:
-            csv_path (string): path to csv file
+            data (DataFrame):  pandas.DataFrame of dataset
             feature_list (string): List of features to consider
         """
-        # Read the csv file
         self.data = data
         # Set up samples
         if feature_list is not None:
             self.samples = np.asarray(self.data[feature_list])
         else:
             self.samples = np.asarray(self.data.loc[:, self.data.columns != 'atd'])
-	    
-        #Normalize 
+
+        # Normalize
         self.normalized_samples = (self.samples - np.mean(self.samples, axis=0)) / np.std(self.samples, axis=0)
-        self.normalized_samples = np.nan_to_num(self.normalized_samples)
+
+        print("Checking normalized samples for NaNs ...\n")
+        if np.isnan(np.sum(self.normalized_samples)):
+            print("Normalized samples have NaNs. Replace NaNs with 0s ...\n")
+            self.normalized_samples = np.nan_to_num(self.normalized_samples)
+            print("NaNs replaced.\n")
         # Set up labels
         if objective == "ae":
             self.labels = np.asarray(self.normalized_samples)
         else:
             self.labels = np.asarray(self.data['atd'] - self.data['etd'])
- 
+
     def __len__(self):
         return len(self.data)
 
@@ -94,9 +98,9 @@ class ETDData(Dataset):
         return sample, label
 
 
-    
 class EarlyStopping:
     """Early stops the training if validation loss doesn't improve after a given patience."""
+
     def __init__(self, patience=7, verbose=False):
         """
         Args:

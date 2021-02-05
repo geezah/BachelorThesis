@@ -1,9 +1,13 @@
 \chapter{Problem formulation}
 
-This chapter gives a short overview of the classical RMDP from \cite{UlmerRMDP} and the RMDPEAT introduced in \cite{Hildebrandt2020_EAT} and then gives a formal, but concise description of the EAT.
-\section{Restaurant Meal Delivery Problem with Arrival Time Estimation}
+This chapter gives a short overview of the classical RMDP from \cite{UlmerRMDP} and the RMDPEAT introduced in \cite{Hildebrandt2020_EAT}. Then, we give a formal, but concise description of the EAT.
+\section{Restaurant Meal Delivery Problem}
 
-According to the taxonomy for DVR problems introduced in \cite{psaraftis}, the classical RMDP belongs to the category of dynamic (1) and stochastic (2) problems since (1) drivers routes need to be reoptimized over time by means of a routing policy and (2) only the probability distributions of inputs are known at the start of the problem respectively. In the RMDP, customers are distributed across a known service area and request service during a finite service time window. Drivers are independent contractors distributed in the service area and are dispatched by the meal delivery platform that provides meal delivery service for participating restaurants. The RMDP process is triggered with the arrival of customer requests. When a customer requests service on the meal delivery platform, a driver according to the assignment policy proposed in \cite{UlmerRMDP}. It is assumed that drivers get to decide on their own how orders are sequenced and routed. Thus, the routing policy is exogenously given. The RMDP further assumes that orders can be bundled. Order bundling refers to the possibility of assigning a vehicle more than one order at a time which results in greater flexibility in assignment decisions. Overall, the RMDP seeks maximization in the amount of served customers and minimization in delivery delays.
+According to the taxonomy for dynamic vehicle routing problems introduced in \cite{psaraftis}, the classical RMDP belongs to the category of dynamic (1) and stochastic (2) problems since (1) drivers routes need to be reoptimized over time by means of a routing policy and (2) only the probability distributions of inputs are known at the start of the problem respectively. In the RMDP, customers are distributed across a known service area and request service during a finite service time window. Drivers are independent contractors distributed in the service area and are dispatched by the meal delivery platform that provides meal delivery service for participating restaurants. The RMDP process is triggered with the arrival of customer requests. When a customer requests service on the meal delivery platform, the assignment policy proposed in \cite{UlmerRMDP} assigns the customer an available driver. It is assumed that drivers are routed by the meal delivery platform. Thus, the routing policy is exogenously given. The RMDP further assumes that orders can be bundled. Order bundling refers to the possibility of assigning a vehicle more than one order at a time which results in greater flexibility in assignment decisions. Overall, the RMDP seeks maximization in the amount of served customers and minimization in delivery delays.
+
+
+
+\section{Restaurant Meal Delivery Problem with Arrival Time Estimation}
 
 The classical RMDP assumes that planned arrival times are the result of assump-tions made by the dispatcher. In contrast to \citet{UlmerRMDP}, \citet{Hildebrandt2020_EAT} account for arrival time estimations in their problem by providing customers requesting service on the platform estimated arrival times for each restau-rant. That way, customers are given the choice to either order from a prefered restaurant if the arrival time preferences are met, or do not order at all. As we already pointed out in the very beginning, this is crucial as there is evidence of arrival delay having a negative impact on customer satisfaction. 
 
@@ -32,93 +36,4 @@ Equation \ref{equation:3.1} seeks to minimize the expected deviance of the estim
 %Thus, the routing decision itself is uncertain due to (1), realization of pickup and delivery actions is uncertain due to (2) and (3), and restaurant workloads are uncertain due to (3) and (4). 
 %$ \mathcal{N}_{k+1} $ depends on all four sources of uncertainty and the routing decision.
 %Last but not least, the RMDP seeks to maximize the number of served customers within the service horizon and minimize delays of predicted arrival times wrt. actual arrival times. Latter is the focus of \cite{Hildebrandt2020_EAT} and therefore also the focus of this work.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     

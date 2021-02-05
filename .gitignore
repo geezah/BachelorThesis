@@ -23,7 +23,7 @@ ds_latex/ds_seminar.pdf
 
 #Folders
 venv/
-
+Implementation/.idea/
 # Misc
 *.~lock.*
 

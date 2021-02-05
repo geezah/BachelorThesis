@@ -2,10 +2,11 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+
 class Autoencoder(torch.nn.Module):
     def __init__(self, n_features, n_hidden, n_code):
         super(Autoencoder, self).__init__()
-        self.name = "ae"
+        self.mode = "ae"
         self.view = n_features
         self.hidden_enc = nn.Linear(n_features, n_hidden)
         self.encode = nn.Linear(n_hidden, n_code)
@@ -19,15 +20,16 @@ class Autoencoder(torch.nn.Module):
         x = self.decode(x)
 
         return x
-    
+
+
 class Regressor(torch.nn.Module):
     def __init__(self, n_features, n_hidden, n_output):
         super(Regressor, self).__init__()
-        self.name = "regressor"
+        self.mode = "regression"
         self.view = n_output
         self.hidden = nn.Linear(n_features, n_hidden)
-        self.predict = nn.Linear(n_hidden, n_output)
-    
+        self.predict = nn.Linear(n_hidden / 2, n_output)
+
     def forward(self, x):
         x = F.leaky_relu(self.hidden(x))
         x = self.predict(x)
