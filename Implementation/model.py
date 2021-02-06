@@ -1,3 +1,5 @@
+import math
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -23,15 +25,19 @@ class Autoencoder(torch.nn.Module):
 
 
 class Regressor(torch.nn.Module):
-    def __init__(self, n_features, n_hidden, n_output):
+    def __init__(self, n_features, n_layers):
         super(Regressor, self).__init__()
         self.mode = "regression"
-        self.view = n_output
-        self.hidden = nn.Linear(n_features, n_hidden)
-        self.predict = nn.Linear(n_hidden / 2, n_output)
+        self.view = 1
+        self.layers = []
+        self.neurons = n_features
+        if n_layers != 0:
+            for layer in range(n_layers):
+                self.layers.append(torch.nn.Linear(self.neurons, math.ceil(self.neurons/2)))
+                self.layers.append(torch.nn.LeakyReLU())
+                self.neurons = self.neurons / 2
+        self.layers.append(torch.nn.Linear(self.neurons, 1))
+        self.main = torch.nn.Sequential(*self.layers)
 
     def forward(self, x):
-        x = F.leaky_relu(self.hidden(x))
-        x = self.predict(x)
-
-        return x
+        return self.main(x)
