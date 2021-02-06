@@ -32,16 +32,20 @@ Panel (a) of figure \ref{fig:predelay} shows the distribution of delivery delay 
 
 \section{Experiment: Sample Size tests}\label{sec:samplesize}
 
+This section compares the convergence for each possible combination of model and dataset each. With this experiment, we intend to examine how different sizes in training data affect the test error for the respective combination. Since less samples in the training data corresponds to lower training times, we use the results of this experiment for the subsequent hyperparameter optimization and the noise analysis to increase training speed. For our linear model and the considered ensembles, we consider 100 training runs on both datasets each. For each run, we randomly sample subsets of size $ \{2000, 4000, \dots, 200.000\} $. For each model, we set the parameters manually since we did not conduct hyperparameter optimization yet. By trial-and-error, we found that our models converge 
 
 \section{Experiment: Hyperparameter Optimization}\label{sec:hpo}
-This section presents the hyperparameter optimization (HPO) experiments conducted for GBDTs, RFs, and the neural network architecture presented in section \ref{sec:nn}. 
-We use \textit{Optuna} to conduct our HPO experiments, a popular HPO framework presented in \cite{akiba2019optuna}. 
-\textit{Optuna} provides a simple implementation design that allows us to analyze evaluated parameters from different points of view. 
+This section presents the hyperparameter optimization (HPO) experiments conducted for GBDTs, RFs, and the neural network. 
+We use \textit{Optuna}, a popular HPO framework proposed and designed by \cite{akiba2019optuna}, to conduct our HPO experiments. 
+\textit{Optuna} provides a simple implementation design that allows us to analyze several parameters of choice from different points of view. 
 The optimizations were conducted on both the crafted data set and the raw data set. 
 Concretely, we will proceed as follows: First, we will present the hyperparameters we decided to include in the HPO to then in turn present the optimal hyperparameter values resulting from the experiment and explore the predictive power of different parametrizations. 
-For every experiment instance, the hyperparameters will be sampled via the \textbf{C}ovariance \textbf{M}atrix \textbf{A}daption \textbf{E}volution \textbf{S}trategy, or in short \textbf{CMA-ES}. \textit{CMA-ES} follows a simple principle: The probability of samples from previously succesful optimization steps being drawn again is positively correlated to the contribution of those samples to the objective. For further information on \textit{CMA-ES}, the reader is referred to \cite{hansen2016cma}. To speed up the optimization process, we use the \textit{Optuna}-implementation of the \textit{Hyperband Pruner} presented in \cite{li2018hyperband}. 
+For every GBDT and RF experiment instance, the hyperparameters will be sampled via the \textbf{C}ovariance \textbf{M}atrix \textbf{A}daption \textbf{E}volution \textbf{S}trategy, or in short \textbf{CMA-ES}. 
+\textit{CMA-ES} follows a simple principle: The probability of samples from previously succesful optimization steps being drawn again is positively correlated to the contribution of those samples to the objective. For further information on \textit{CMA-ES}, the reader is referred to \cite{hansen2016cma}. 
+To speed up the optimization process, we use the \textit{Optuna}-implementation of the \textit{Hyperband Pruner} presented in \cite{li2018hyperband}. 
 By that, we hope to get a fine-tuned model that maximizes prediction quality on one hand, and intuition for parametrization on the other.
-Secondly, we will use the \textit{optuna} implementation of the \textit{fANOVA} evaluation algorithm presented in \cite{fANOVA} to determine hyperparameter importances. In short, \textit{fANOVA} calculates feature importances by fitting a random forest regression model to the parameter configuration resulting of the HPO and predicting the objective value. For this task, we set the number of estimators to 1000 for every HPO instance.
+Secondly, we will use the \textit{optuna} implementation of the \textit{fANOVA} evaluation algorithm presented in \cite{fANOVA} to determine hyperparameter importances. 
+In short, \textit{fANOVA} calculates feature importances by fitting a random forest regression model to the optimal parameter configuration that results of the HPO and predict the objective value with that model. For each parameter importance prediction, we set the number of estimators to 1000.
 Thereby, we can assess which parameters impact the model significantly and which parameters are less significant, and especially how the importances differ for the two data sets. 
 Lastly, we will examine interdependencies between the evaluated hyperparameters. 
  

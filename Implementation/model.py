@@ -25,17 +25,19 @@ class Autoencoder(torch.nn.Module):
 
 
 class Regressor(torch.nn.Module):
-    def __init__(self, n_features, n_layers):
+    def __init__(self, n_features, n_layers, factor):
         super(Regressor, self).__init__()
         self.mode = "regression"
         self.view = 1
         self.layers = []
         self.neurons = n_features
+        print(f"self.neurons init: {self.neurons}")
         if n_layers != 0:
             for layer in range(n_layers):
-                self.layers.append(torch.nn.Linear(self.neurons, math.ceil(self.neurons/2)))
+                self.layers.append(torch.nn.Linear(self.neurons, math.ceil(self.neurons*factor)))
                 self.layers.append(torch.nn.LeakyReLU())
-                self.neurons = self.neurons / 2
+                self.neurons = math.ceil(self.neurons*factor)
+                print(f"self.neurons for hidden layer {layer+1}: {self.neurons}\n")
         self.layers.append(torch.nn.Linear(self.neurons, 1))
         self.main = torch.nn.Sequential(*self.layers)
 

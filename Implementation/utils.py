@@ -23,6 +23,9 @@ class DataSplit:
 
         self.train_indices, self.val_indices = train_indices[: validation_split], train_indices[validation_split:]
 
+        print(f"Number of training samples: {len(self.train_indices)}")
+        print(f"Number of test samples: {len(self.test_indices)}\n")
+
         self.train_sampler = sampler.SubsetRandomSampler(self.train_indices)
         self.val_sampler = sampler.SubsetRandomSampler(self.val_indices)
         self.test_sampler = sampler.SubsetRandomSampler(self.test_indices)
@@ -78,7 +81,7 @@ class ETDData(Dataset):
 
         print("Checking normalized samples for NaNs ...\n")
         if np.isnan(np.sum(self.normalized_samples)):
-            print("Normalized samples have NaNs. Replace NaNs with 0s ...\n")
+            print("Normalized samples have NaNs. Replace NaNs with 0s ...")
             self.normalized_samples = np.nan_to_num(self.normalized_samples)
             print("NaNs replaced.\n")
         # Set up labels
