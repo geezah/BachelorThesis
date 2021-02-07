@@ -25,13 +25,13 @@
 \usepackage{amsmath}
 \DeclareMathOperator*{\argmin}{arg\,min}
 \usepackage{graphicx}
-\usepackage[section]{placeins}
 \usepackage{subfigure}
 \usepackage{enumitem}
 \setlist[description]{leftmargin=\parindent,labelindent=\parindent}
 \usepackage{hyperref}
 
 \usepackage{setspace}
+\usepackage[section]{placeins}
 \onehalfspacing
 %%% title, author und date m?ssen angegeben werden,
 %%% dozent, betreuer und keywords sind optional.
@@ -54,23 +54,23 @@
 \begin{document}
 
 %%% Titelteil
-%\titelblatt             %%% obligatorisch
-%\erklaerung             %%% obligatorisch fuer Abschlussarbeiten
-%\tableofcontents        %%% obligatorisch
+\titelblatt             %%% obligatorisch
+\erklaerung             %%% obligatorisch fuer Abschlussarbeiten
+\tableofcontents        %%% obligatorisch
 %\listoftables           %%% optional
-%\listoffigures          %%% optional
+\listoffigures          %%% optional
 %\abkuerzung             %%% optional, in der Datei abkuerzung.tex
 
 
 %%% ------------- Der Textteil -------------
 \starttext              
 
-%\include{Introduction}
-%\include{LiteratureReview}
+\include{Introduction}
+\include{LiteratureReview}
 \include{Model}
-%\include{Solution}
-%\include{ComputationalStudy}
-%\include{Conclusion}
+\include{Solution}
+\include{ComputationalStudy}
+\include{Conclusion}
 
 %%% ------------- Ende Textteil -------------
 
