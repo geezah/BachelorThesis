@@ -23,15 +23,19 @@ Overall, the RMDP seeks maximization in the amount of served customers and minim
 Now that we are familiar with the route-based MDP notation for the RMDP, we will point out how the RMDPEAT differs from the classical RMDP in the subsequent section. 
 \section{Restaurant Meal Delivery Problem with Arrival Time Estimation}
 
-When a request comes in, a new decision point in the RMDP is triggered. Consequently, an assignment decision has to be made. After that, the RMDP assigns the request to the driver regarded as the optimal choice wrt. deterministic and stochastic costs. When this is done, the random information occuring during the transition is realized when the next decision epoch $ k+1 $ is triggered. The difference between the RMDP and RMDPEAT is that the customer's restaurant choice is not modeled in this process. Random information in the RMDP includes uncertainty in meal preparation times and delivery times. The RMDPEAT additionally considers the customer's restaurant choice as random information and models it explicitly by assuming that customer preferences are composed of customers' static restaurant and dynamic arrival time preferences. Hence, \cite{Hildebrandt2020_EAT} account for the customer order process. The changes wrt. to the route-based MDP notation are the following:
-\begin{description}[font=$\bullet$\scshape\bfseries]
-	\item \textbf{Modified Decision States}: 
-	\item \textbf{Modified Decisions}:
-	\item \textbf{Modified Transitions}: 
-\end{description}
+When a request comes in, a new decision point in the RMDP is triggered. Consequently, an assignment decision has to be made. After that, the RMDP assigns the request to the driver regarded as the optimal choice wrt. deterministic and stochastic costs. When this is done, the random information occuring during the transition is realized when the next decision epoch $ k+1 $ is triggered. However, customers' restaurant choices are not modeled in the RMDP process since random information in the RMDP only includes uncertainty in meal preparation and delivery. The RMDPEAT however additionally considers the customer's restaurant choice as random information and models it explicitly by assuming that customer preferences are composed of customers' static restaurant and dynamic arrival time preferences. Hence, the RMDPEAT accounts for the customer order process. 
 
 The RMDPEAT process is triggered when a customer requests delivery. This leads to the calculation of estimated times of arrival for each restaurant the customer can order from that are then communicated to the customer. Based on his restaurant and arrival time preferences, the customer decides either to order from a restaurant or to not order at all. When the customer decides not to order, the process is terminated. When the customer orders, the dispatcher informs the chosen restaurant and updates driver routes. The process terminates when the request has been served. 
-\cite{UlmerBarrett2017_TWAP} assume that planned arrival times are assumptions made by the dispatcher, whereas \cite{Hildebrandt2020_EAT} explicitly account for the arrival time estimations communicated to the customer. As we already pointed out in the very beginning, this is crucial as there is evidence of arrival delay having a negative impact on customer satisfaction.
+\cite{UlmerBarrett2017_TWAP} assume that planned arrival times are assumptions made by the dispatcher, whereas \cite{Hildebrandt2020_EAT} explicitly account for the arrival time estimations communicated to the customer. As we already pointed out in chapter 1 of this paper, this is crucial as there is evidence of arrival delay having a negative impact on customer satisfaction.
+
+The changes wrt. to the route-based MDP are the following:
+\begin{description}[font=$\bullet$\scshape\bfseries]
+	\item \textbf{Modified Decision States}: As described, the RMDP state space contains the set of orders that are yet to serve, and the set of planned routes. Additionally, the RMDPEAT state space is extended by the set of restaurants $ R_k $ and their respective workloads. Further, they extend the information available for routes by not only including sequences of pick up and delivery locations to be visited, which is just spatial information, but also incorporating temporal quantities for each sequences as well. 
+	\item \textbf{Modified Decisions}: 
+	In the RMDP, a decision is triggered if a customer requests service or if the assignment of a request is postponed. However, decisions made in the RMDPEAT have two stages. As in the RMDP, the first stage updates the set of orders and the driver routes. The RMDPEAT adds a second stage where arrival times are estimated based on the current RMDPEAT state and the route updates. These estimations are then communicated to the customer.  
+	\item \textbf{Modified Transitions}: In the RMDPEAT, the restaurant choice of the customer and stochastic parking and meal preparation times of the delivery actions happening during a transition are now additionally considered as random information. Therefore, when decision epoch $ k $ is triggered and the transition to epoch $ k+1 $ is therefore finished, the random information realized during transition is known. 
+\end{description}
+
 Since the RMDPEAT is a composite of two problems, namely the RMDP which accounts for driver assignment and routing, and the problem of estimating arrival times for delivery routing (EAT), it seeks to maximize the expected number of served customers and communicate accurate arrival times to the customer. The latter is the focus of the EAT, which is covered in the next section in detail.
 
 \section{Estimating arrival times for delivery routing}
@@ -45,6 +49,6 @@ The objective of the EAT is defined as
 	\mathbb{E}_{S^{EAT}_{k}} 
 	(|| A(S^{EAT}_{k})(j) - X(S^{EAT}_{k})(j)||^{2}_{2}).
 \end{equation}
-Equation \ref{equation:3.1} seeks to minimize the expected deviance of the estimated arrival time $ X(S^{EAT}_{k})(j) $ from the actual arrival time $ A(S^{EAT}_{k})(j) $ where $ j $ represents the restau-rant that the customer will chose. The deviance is measured with the mean squared error. 
+Equation \ref{equation:3.1} seeks to minimize the expected deviance of the estimated arrival time $ X(S^{EAT}_{k})(j) $ from the actual arrival time $ A(S^{EAT}_{k})(j) $ where $ j $ represents the restau-rant that the customer will chose. The deviance is measured with the mean squared error.
 
     
