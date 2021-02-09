@@ -1,4 +1,4 @@
-\chapter{Computational Study}
+\chapter{Computational Study}\label{chap:comp}
 
 This chapter presents our computational study and is structured as follows: 
 Section \ref{sec:data} describes the data our experiments are conducted on.
@@ -7,7 +7,9 @@ In Section \ref{sec:hpo}, we optimize model hyperparameters and seek to get bett
 Last but not least, section \ref{sec:noise} demonstrates how noise affects predictive performance of our models.
 
 \section{Data exploration}\label{sec:data}
-The available data set is provided by \cite{Hildebrandt2020_EAT} who created a high-dimensional data model with the RMDP instances originally used in \cite{UlmerRMDP}. It comprises 850.469 samples, 23.341 unique customer locations, a delivery fleet of 15 vehicles and 15 unique restaurant locations. The temporal and spatial distribution of the orders is depicted in figure \ref{fig:dists}. 
+The available data set is provided by \cite{Hildebrandt2020_EAT} who create a dataset using the RMDP instances originally used in \cite{UlmerRMDP}. It comprises 850.469 samples with 23.341 unique customer locations, a delivery fleet of 15 vehicles and 15 unique restaurant locations. The temporal and spatial distribution of the orders is depicted in figure \ref{fig:dists}. 
+Panel (a) of figure \ref{fig:dists} shows the order behaviour of customers. The x-axis denotes the day time in minutes, the y-axis denotes the relative frequency of incoming customer orders for a given day time on the y-axis. We can observe that the order time behaviour across all customers follows a bimodal gaussian distribution. The order frequency peaks at around 12:00 a.m (roughly 700 minutes of day time) and again around 6.00 p.m (roughly 1100 minutes of day time). This indicates that the probability of an order taking place during lunch or dinner time is relatively high.  
+Panel (b) of figure \ref{fig:dists} shows the spatial distribution of customer and restaurant locations. The x- and y-axis show the location longitudes and the latitudes respectively. The blue points represent customers, the orange points depict the restaurant locations. There we can see that the majority of restaurants is located where the density of customer locations is rather high. 
 \begin{figure}[h]
 	\centering
 	\subfigure[Request arrival time distribution]{\includegraphics[width=0.49\linewidth]{../Implementation/DataDescription/order_time_dist.png}}
@@ -15,10 +17,9 @@ The available data set is provided by \cite{Hildebrandt2020_EAT} who created a h
 	\caption{Spatial and temporal distributions}
 	\label{fig:dists}
 \end{figure}
-
-Panel (a) of figure \ref{fig:dists} shows the order behaviour of customers. The x-axis denotes the day time in minutes, the y-axis denotes the relative frequency of incoming customer orders for a given day time on the y-axis. We can observe that the order time behaviour across all customers follows a bimodal gaussian distribution. The order frequency peaks at around 12:00 a.m (roughly 700 minutes of day time) and again around 6.00 p.m (roughly 1100 minutes of day time). This indicates that the probability of an order taking place during lunch or dinner time is relatively high.  
-Panel (b) of figure \ref{fig:dists} shows the spatial distribution of customer and restaurant locations. The x-axis depicts the  
-
+ 
+Panel (a) of figure \ref{fig:prepdelay} shows the distribution of delivery delay times in minutes for all requests in the data. The delivery dela is here defined as the difference between actual and the expected time of arrival based on PoM. First, we observe that roughly 14-15\% of the requests in our data are delivered on time. Negative values for the delivery delay on the plot indicate that a rather tiny amount of orders happens to be delivered earlier than expected. However, we are most interested in the orders that are actually delivered later than expected. We observe that a non-trivial amount of orders is delivered with a delay of up to 20 minutes. As we will later show, arrival time estimation via supervised learning is a vastly better option compared to planning on means.
+Since arrival times are impacted by uncertainty in meal preparation times, we take a look at their distribution in our data as well. In panel (b) of figure \ref{fig:prepdelay}, we observe that roughly a fifth of the orders had a preparation time of around 10 minutes. However, a non-trivial amount of orders seem to have quite longer preparation times ranging from 15 to less than 40 minutes. 
 \begin{figure}[h]
 	\centering
 	\subfigure[Delivery delay distribution]{\includegraphics[width=0.49\linewidth]{../Implementation/DataDescription/delivery_delay.png}}
@@ -26,13 +27,12 @@ Panel (b) of figure \ref{fig:dists} shows the spatial distribution of customer a
 	\caption{Spatial and temporal distributions}
 	\label{fig:prepdelay}
 \end{figure}
-Panel (a) of figure \ref{fig:prepdelay} shows the distribution of delivery delay times in minutes for all requests in the data. The delivery dela is here defined as the difference between actual and the expected time of arrival based on PoM. First, we observe that roughly 14-15\% of the requests in our data are delivered on time. Negative values for the delivery delay on the plot indicate that a rather tiny amount of orders happens to be delivered earlier than expected. However, we are most interested in the orders that are actually delivered later than expected. We observe that a non-trivial amount of orders is delivered with a delay of up to 20 minutes. As we will later show, arrival time estimation via supervised learning is a vastly better option compared to planning on means.
-Since arrival times are impacted by uncertainty in meal preparation times, we take a look at their distribution in our data as well. In panel (b) of figure \ref{fig:prepdelay}, we observe that roughly a fifth of the orders had a preparation time of around 10 minutes. However, a non-trivial amount of orders seem to have quite longer preparation times ranging from 15 to less than 40 minutes. 
 
 \section{Experiment: Sufficient Sample Sizes}\label{sec:samplesize}
 
-This section compares how a difference sample size impact the test error for each possible combination of models and datasets. With this experiment, we intend to examine how different sizes in training data affect the test error for the respective combination. Since less samples in the training data corresponds to lower training times, we use the results of this experiment for the subsequent hyperparameter optimization and the noise analysis to speed our experimental procedure up. For our linear model and the considered ensembles, we consider 100 training runs with every run corresponding to a sample subset size $ \{2000, 4000, \dots, 200.000\} $. For each model, we set the parameters manually since we did not conduct hyperparameter optimization yet. 
+This section compares how a difference in sample size impact the test error for each possible combination of models and datasets. With this experiment, we intend to examine how different sizes in training data affect the test error for the respective combination. Since less samples in the training data corresponds to lower training times, we use the results of this experiment for the subsequent hyperparameter optimization and the noise analysis to speed our experimental procedure up. For our linear model and the considered ensembles, we consider 100 training runs with every run corresponding to a sample subset size $ \{2000, 4000, \dots, 200.000\} $. For each model, we set the parameters manually found by trial-and-error since we did not conduct the hyperparameter optimization yet. For GBDT, we set the learning rate to 0.02, the number of estimators to 1000 and enable early stopping with a patience of 20. For Random Forest, we set the number of estimators again to 1000 and subsample 80\% of the samples from only 80\% of the features in every iteration. For Random Forest, we enable early stopping with a patience of 20 as well. Every iteration for every test instance is validated on the same validation set which contains 20\% of our total amount samples.
 
+Figure \ref{fig:convergences} shows the the model performances on both datasets with increasing sample sizes. In all panels, the x-axis depicts the sample size in a training run, and the y-axis represents the mean squared test error (MSE) of that run. GBDT, Random Forest and Linear Regresson belong to their own panels (a), (b), and (c) respectively. For GBDT and Random Forest, we observe that a sample size of 200.000 seems to be sufficient since the models, whether they are trained on the raw or the crafted data, begin to converge there. For GBDT, the MSE at a sample size of 200.000 is approximately 26 when trained on the raw data, and between 27-28 when trained on crafted data. Random Forest performs a bit worse 
 \begin{figure}[h]
 	\centering
 	\subfigure[For GBDT]{\includegraphics[width=0.49\linewidth]{../Implementation/SampleSize/GBDT_SampleSizes.png}}
@@ -41,19 +41,15 @@ This section compares how a difference sample size impact the test error for eac
 	\caption{MSE for different sample sizes}
 	\label{fig:convergences}
 \end{figure}
-
-[TODO: Explain results]
-\section{Experiment: Hyperparameter Optimization}\label{sec:hpo}
-This section presents the hyperparameter optimization (HPO) experiments conducted for GBDT and Random Forest.
+\section{Experiment: Hyperparameter Analysis}\label{sec:hpo}
+This section presents the hyperparameter optimization (HPO) experiments conducted for GBDT and Random Forest. 
 We use \textit{Optuna}, a popular HPO framework proposed and designed by \cite{akiba2019optuna}, to conduct our HPO experiments. 
 \textit{Optuna} provides a simple implementation design that allows us to analyze several parameters of choice from different points of view. 
 The optimizations were conducted on both the crafted data set and the raw data set. 
-Concretely, we will proceed as follows: First, we will present the hyperparameters we decided to include in the HPO to then in turn present the optimal hyperparameter values resulting from the experiment and explore the predictive power of different parametrizations. 
-For every GBDT and RF experiment instance, the hyperparameters will be sampled via the \textbf{C}ovariance \textbf{M}atrix \textbf{A}daption \textbf{E}volution \textbf{S}trategy, or in short \textbf{CMA-ES}. 
-\textit{CMA-ES} follows a simple principle: The probability of samples from previously succesful optimization steps being drawn again is positively correlated to the contribution of those samples to the objective. For further information on \textit{CMA-ES}, the reader is referred to \cite{hansen2016cma}. 
-To speed up the optimization process, we use the \textit{Optuna}-implementation of the \textit{Hyperband Pruner} presented in \cite{li2018hyperband} and furthermore use only 200.000 of our samples since the models begin to converge at this subset size as shown in section \ref{sec:samplesize}. By that, we hope to get a fine-tuned model that maximizes prediction quality on one hand, and intuition for suitable parametrizations on the other hand.
-In the next step, we will use the \textit{optuna} implementation of the \textit{fANOVA} evaluation algorithm presented in \cite{fANOVA} to determine hyperparameter importances. 
-In short, \textit{fANOVA} calculates feature importances by fitting a random forest regression model to the optimal parameter configuration that results of the HPO with which it aims to predict the corresponding objective value. The relative importances provide information about the parameter variances. A higher value is associated with a higher variance, meaning that a change of the parameter setting will have a greater impact on the prediction performance compared to parameters of low relative importance. Thereby, we can assess which parameters impact the model significantly and which parameters are less significant, and especially how the importances differ for the two data sets. For each parameter importance prediction, we set the number of estimators in \textit{fANOVA} to 1000.
+Concretely, we will proceed as follows: First, we will present the hyperparameters we decided to include in the HPO, then present the optimal hyperparameter values resulting from the experiment and explore the predictive power of different parametrizations. 
+For every GBDT and RF experiment instance, we will use the \textit{Optuna}-implementation of \textit{CMA-ES} to sample values from the respective search spaces of the parameters considered for optimization. To speed up the optimization process, we use the \textit{Optuna}-implementation of the \textit{Hyperband Pruner} presented in \cite{li2018hyperband} and furthermore use only 200.000 of our samples since the models begin to converge at this subset size as shown in section \ref{sec:samplesize}. 
+We will use the \textit{optuna} implementation of \textit{fANOVA} presented in \cite{fANOVA} to determine hyperparameter importances. 
+For each parameter importance prediction, we set the number of estimators in \textit{fANOVA} to 1000.
 \subsection{GBDT}
 
 In this subsection, we will conduct HPO experiments for GBDTs on both datasets. 
@@ -70,7 +66,7 @@ For GBDT, we decided to optimize following parameters and set the search spaces 
 \end{description}
 Besides the parameters considered for optimization, we set the number of estimators for one iteration in GBDT to 1000 and enable early stopping with a patience of 20. Our selection of parameter search spaces is the result of trial-and-error since machine learning problems are highly individual and, as we have already demonstrated with our literature review, different solution approaches for quite similar problems are possible. The determination of parameter values and parameter search spaces therefore has to happen at least partly in a manual fashion, which is why we regard the trial-and-error heuristic as a suitable approach for the configuration of hyperparameter values and hyperparameter search spaces for our HPO. Detailed descriptions of the considered parameters for the \textit{lightgbm}-GBDT implementation can be found under \url{https://lightgbm.readthedocs.io/en/latest/Parameters.html}.
 
-The exact optimal parameter configuration for GBDT on both data sets is depicted in figure \ref{fig:GBDT_Optimal}. Training GBDT with the optimal parameter configuration using the full available amount of samples results in a mean squared test error of approximately 25.1384 on the raw data, and 27.0852 on the crafted data. Early Stopping does not set in when training GBDT on raw data, whereas it does set in for the crafted data at around 600. 
+The exact optimal parameter configuration for GBDT on both data sets is depicted in figure \ref{fig:GBDT_Optimal}. Training GBDT with the optimal parameter configuration using the full available amount of samples results in a mean squared error of approximately 25.1384 on the raw data, and 27.0852 on the crafted data. Early Stopping does not set in when training GBDT on raw data, whereas it does set in for the crafted data at around 600. 
 \begin{figure}[h]
 	\centering
 	\subfigure[Optimal configurations]{\includegraphics[width=\linewidth]{figures/HPO/GBDT_ResultsTable_HPO_Optimal.pdf}}
@@ -148,7 +144,7 @@ The hyperparameter importances for Random Forest on the raw and the crafted data
 	\label{fig:RF_Importances}
 \end{figure} 
  
-\section{Experiment: Adding Noise}\label{sec:noise}
+\section{Experiment: Robustness}\label{sec:noise}
 In this experiment, we test the robustness of our models on full sample size. We do this by randomly sampling values from the gaussian distribution
 \begin{equation}
 	p(x) = \dfrac{1}{\sqrt{2\pi\sigma^{2}}} e^{-\dfrac{(x-\mu)^2}{2\sigma^2}}

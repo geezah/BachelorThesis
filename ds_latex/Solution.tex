@@ -1,14 +1,33 @@
 
 
 \chapter{Methodology}
-This chapter presents our methodogolical approach and describes its elements in detail.
-Section 4.1 gives an overview of the methodological approach used to evaluate and compare the models. 
+This chapter presents our methodogolical approach and describes its elements in detail. Section 4.1 gives an overview of the methodological approach used to evaluate and compare the models. 
 Section 4.2 gives an introduction to supervised learning and presents the different models considered in the comparison in detail.
 Section 4.3 focusses on feature selection techniques applied in our computational study.
 
+\section{Design of Experiments}
+
+The primary goal of this study is to find the most suitable model for the given arrival time estimation problem. 
+To attain the best possible solution for this problem, it is necessary to analyze the presented mdoels from different points of view since it is not always clear which model does the best job in predicting arrival times as our literature review shows. 
+While \cite{Zhu2020_OFCTE_DL} use deep learning as a means of estimating arrival respectively delivery times for restaurant meal delivery, \cite{Hildebrandt2020_EAT} turn to GBDTs on a quite similar problem setting, whereas \cite{Liu2018_LM_PLM} conclude that linear models are the better choice overall. 
+For that reason, we will conduct experiments that will allow us to analyze the behaviour of the considered models and their parameters. 
+Further challenge also lies in the selection of a well suited data model for the given problem which is highly non-trivial. 
+Almost every related work shown in the literature review crafts features manually with the help of human domain expertise, and rightfully so: Raw data usually characterized by high dimensionality and sparse information, we aim to find the right balance for the two conflicting objectives of minimizing the feature space and thus reducing the dimensionality on the hand, while maximizing the informative value each considered feature contributes to the objective on the other hand. 
+To demonstrate how models perform on different datasets and to find out which data model delivers more promising results, we decide to conduct our experiments upon the two data models presented in section \ref{sec:fs}, with one data model being high in dimensionality and the other one having a significantly smaller feature space.
+In real-world scenarios, data can be corrupted by external influences, either caused by human or machine error. 
+To see how those corruptions affect the model performances, we analyze supervised learning models also wrt. their robustness. 
+
+Our experimental pipeline is designed as follows:
+\begin{enumerate}
+	\item \textbf{Finding Sufficient Sample Sizes:} The more data is available for training, the better the generalization will be. However, this conflicts with training times since there are more calculations to make when there is more data. Therefore, we seek a good balance for the tradeoff between sample size and accuracy. We do this by defining a number of training runs and assigning each run sample sizes from an interval with evenly spaced values. This experiment returns the sufficient sample size for each model, and additionally gives us information on how the models perform on solely manually set hyperparameters.  
+	\item \textbf{Hyperparameter Analysis:} Tree-based ensembles are complex in their structure and can achieve great performance when their parameters are tuned properly. For that reason, we intend to conduct hyperparameter optimization (HPO) for GBDT and Random Forest. We will first specify the hyperparameters we consider to optimize and then specify their respective search space. The values from these evenly-spaced search space intervals are sampled via the \textbf{C}ovariance \textbf{M}atrix \textbf{A}daption \textbf{E}volution \textbf{S}trategy, or in short \textbf{CMA-ES}. \textit{CMA-ES} follows a simple principle: The probability of samples from previously succesful optimization steps being drawn again is positively correlated to the contribution of those samples to the objective. For further information on \textit{CMA-ES}, the reader is referred to \cite{hansen2016cma}. To speed up the optimization process, we will use \textbf{hyperband pruning}, a bandit-based optimization approach presented in \cite{li2018hyperband} that prunes unpromising trials early. 
+	Having done the HPO, we now can detect which parameter configurations deliver the best results, and analyze the importances of the optimized hyperparameters for each GBDT and Random Forest optimization on both datasets via \textbf{fANOVA}, a hyperparameter evaluation algorithm presented in \cite{fANOVA}. \textit{fANOVA} calculates feature importances by fitting a random forest regression model to the optimal parameter configuration that results of the HPO with which it aims to predict the corresponding objective value. The relative importances provide information about the parameter variances. A higher value is associated with a higher variance, meaning that a change of the parameter setting will have a greater impact on the prediction performance compared to parameters of low relative importance. Thereby, we can assess which parameters impact the model significantly and which parameters are less significant, and especially how the importances differ for the two data sets. By that, we hope to get a fine-tuned model that maximizes prediction quality on one hand, and intuition for suitable parametrizations on the other hand.
+	\item \textbf{Noise Induction}: To test the robustness of our models, we induce noise on a selected group of temporal features present in both datasets. We further vary the levels of noise to see how an increase of noise impacts the model performances. The smaller a examined model varies in accuracy on different noise levels, the more robust it is. The noise we add to each feature is sampled from a normal gaussian distribution. 
+\end{enumerate}
+We will specify the configuration details for each experiment in chapter \ref{chap:comp}.
 \section{Algorithms}
 
-This section shortly introduces the statistical framework of supervised learning and then proceeds with the detailed examination of how each approach and algorithm included in our comparison, namely linear models, tree-based ensembles and neural networks, function. 
+This section shortly introduces the statistical framework of supervised learning and then proceeds with the detailed examination of how each approach and the chosen algorithm included in our comparison, namely linear models and tree-based ensembles. Since our comparison involves the conduction of several experiments that are quite time consuming due to limitations in hardware, we do not consider a deep learning approach in our comparison. 
 
 \subsection{Framework}
 As inputs, supervised learning algorithms receive \textbf{training data} in form of a finite set $ S = \{({x}_{2}, y_2), ({x}_{2}, y_2), \dots, ({x}_{n}, y_n)\}$ of N pairs from $ \mathcal{X} \times \mathcal{Y} $ where $ x_i $ is a \textbf{sample} described by $ p $ features, and is associated to it's corresponding \textbf{label} $ y_i $.
@@ -123,23 +142,10 @@ Hence, we use the GBDT implemetation of \textit{lightGBM}.
 \section{Feature Selection}\label{sec:fs}
 
 A significant role for the success of machine learning models in general plays the data we gather and how we make sense of it - i.e. how we turn raw data into informative features - since machine learning models can only learn from the data they receive for the learning process. Feature selection seeks two conflicting objectives: Minimize the amount of used features while maximizing the accuracy. Balancing this trade-off is crucial, since an increase in features leads to exponential increase in training time, but a decrease in features can mean that strong predictors are excluded although they would significantly contribute to the objective. Therefore, we intend to analyze how our models work on data sets with different features and especially of different dimensionality. We select our features with the two aforementioned conflicting objectives in mind.  
-Since we operate on the same problem and the same raw data as \cite{Hildebrandt2020_EAT}, we employ the data model proposed in their paper in our work too. As we have seen in the literature review, their data model includes temporal, spatial, routing and processing features and is of low dimensionality with a feature space of 12 features. 
 
-\section{Design of Experiments}
+Since we operate on the same problem and the same raw data as \cite{Hildebrandt2020_EAT}, we employ the data model proposed in their paper in our work too. As we have seen in the literature review, their data model includes temporal, spatial, routing and processing features and is of low dimensionality with a feature space of 12 features.
 
-The primary goal of this study is to find the most suitable model for the given arrival time estimation problem. 
-To attain the best possible solution for this problem, it is necessary to analyze the presented mdoels from different points of view since it is not always clear which model does the best job in predicting arrival times as our literature review shows. 
-While \cite{Zhu2020_OFCTE_DL} use deep learning as a means of estimating arrival respectively delivery times for restaurant meal delivery, \cite{Hildebrandt2020_EAT} turn to GBDTs on a quite similar problem setting, whereas \cite{Liu2018_LM_PLM} conclude that linear models are the better choice overall. 
-For that reason, we will conduct experiments that will allow us to analyze the behaviour of the considered models and their parameters. 
-Further challenge also lies in the selection of a well suited data model for the given problem which is highly non-trivial. 
-Almost every related work shown in the literature review crafts features manually with the help of human domain expertise, and rightfully so: Raw data usually characterized by high dimensionality and sparse information, we aim to find the right balance for the two conflicting objectives of minimizing the feature space and thus reducing the dimensionality on the hand, while maximizing the informative value each considered feature contributes to the objective on the other hand. 
-To demonstrate how models perform on different datasets and to find out which data model delivers more promising results, we decide to conduct our experiments upon the two data models presented in section \ref{sec:fs}, with one data model being high in dimensionality and the other one having a significantly smaller feature space.
-In real-world scenarios, data can be corrupted by external influences, either caused by human or machine error. 
-To see how those corruptions affect the model performances, we analyze supervised learning models also wrt. their robustness. 
 
-Our experimental pipeline is designed as follows:
-\begin{enumerate}
-	\item \textbf{Finding Sufficient Sample Sizes:} The more data is available for training, the better the generalization will be. However, this conflicts with training times since there are more calculations to make when there is more data. Therefore, we seek a good balance for the tradeoff between sample size and accuracy. We do this by defining a number of training runs and assigning each run sample sizes from an interval with evenly spaced values. This experiment returns the sufficient sample size for each model, and additionally gives us information on how the models perform on solely manually set hyperparameters.  
-	\item \textbf{Hyperparameter Optimization (HPO):} 
-\end{enumerate}
+
+
 

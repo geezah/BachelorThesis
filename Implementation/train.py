@@ -1,14 +1,12 @@
-import math
+import torch
+import numpy as np
 import random
 
-import pandas as pd
-from torch import nn, optim
-
-from model import Regressor
-from utils import *
+from utils import ETDData, DataSplit, EarlyStopping
 
 
 def nn_train(model, data, params, feature_list=None, rows=None):
+
     # Set the seed for reproducability
     torch.manual_seed(0)
     np.random.seed(0)
@@ -18,7 +16,7 @@ def nn_train(model, data, params, feature_list=None, rows=None):
     model.to(device)
     print("Importing data.")
 
-    etd_dataset = ETDData(data=data, objective=model.mode)  # TODO: change to model.mode
+    etd_dataset = ETDData(data=data, objective=model.mode) #TODO: change to model.mode
     split = DataSplit(etd_dataset, shuffle=True, rows=rows)
     trainloader, _, testloader = split.get_split(batch_size=params["batch_size"], num_workers=8)
 
@@ -27,7 +25,7 @@ def nn_train(model, data, params, feature_list=None, rows=None):
     criterion = params["criterion"]
     optimizer = params["optimizer"]
 
-    early_stopping = EarlyStopping(patience=patience, verbose=True)
+    early_stopping = EarlyStopping(patience=params["patience"], verbose=True)
     epochs = params["epochs"]
 
     for epoch in range(epochs):
@@ -54,9 +52,9 @@ def nn_train(model, data, params, feature_list=None, rows=None):
                 logps = model.forward(inputs)
                 batch_loss = criterion(logps, labels)
                 test_loss += batch_loss.item()
-        print(f"Epoch {epoch + 1}/{epochs}.. "
-              f"Train loss: {running_loss / len(trainloader):.3f}.. "
-              f"Test loss: {test_loss / len(testloader):.3f}.. ")
+        print(f"Epoch {epoch+1}/{epochs}.. "
+                f"Train loss: {running_loss / len(trainloader):.3f}.. "
+                f"Test loss: {test_loss / len(testloader):.3f}.. ")
         early_stopping(test_loss / len(testloader), model)
         if early_stopping.early_stop:
             print("Early stopping")
@@ -64,41 +62,6 @@ def nn_train(model, data, params, feature_list=None, rows=None):
         model.train()
 
     print('Finished Training')
-    model.load_state_dict(torch.load('checkpoint.pt'))
-    model.save(model, 'perceptron.pth')
+    #model.load_state_dict(torch.load('checkpoint.pt'))
+    #model.save(model, 'perceptron.pth')
     return model, abs(early_stopping.best_score)
-
-
-def sample_size_nn(data, sample_sizes=None):
-    sample_sizes = sample_sizes
-    results = []
-
-    n_features = len(data.columns) - 1
-    print(n_features)
-    n_hidden = math.ceil(n_features * (1 / 2))
-    print(n_hidden)
-    n_code = math.ceil(n_hidden * (1 / 2))
-
-    slp = Regressor(n_features=n_features, n_hidden=n_hidden, n_output=1)
-
-    params = {
-        "patience": 20,
-        "criterion": nn.MSELoss(),
-        "optimizer": optim.Adam(slp.parameters(), lr=0.0001),
-        "epochs": 500,
-        "batch_size": 50,
-    }
-
-    for rows in sample_sizes:
-        model, mse = nn_train(
-            model=slp,
-            data=data,
-            params=params,
-            rows=rows
-        )
-
-
-sample_sizes = [1000, 10000, 100000]
-crafted = pd.read_csv("../../datasets/crafted_features.csv", sep=";", index_col=[0])
-
-sample_size_nn(data=crafted, sample_sizes=sample_sizes)
