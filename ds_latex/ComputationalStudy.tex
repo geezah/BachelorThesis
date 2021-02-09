@@ -29,7 +29,7 @@ Panel (b) of figure \ref{fig:dists} shows the spatial distribution of customer a
 Panel (a) of figure \ref{fig:prepdelay} shows the distribution of delivery delay times in minutes for all requests in the data. The delivery dela is here defined as the difference between actual and the expected time of arrival based on PoM. First, we observe that roughly 14-15\% of the requests in our data are delivered on time. Negative values for the delivery delay on the plot indicate that a rather tiny amount of orders happens to be delivered earlier than expected. However, we are most interested in the orders that are actually delivered later than expected. We observe that a non-trivial amount of orders is delivered with a delay of up to 20 minutes. As we will later show, arrival time estimation via supervised learning is a vastly better option compared to planning on means.
 Since arrival times are impacted by uncertainty in meal preparation times, we take a look at their distribution in our data as well. In panel (b) of figure \ref{fig:prepdelay}, we observe that roughly a fifth of the orders had a preparation time of around 10 minutes. However, a non-trivial amount of orders seem to have quite longer preparation times ranging from 15 to less than 40 minutes. 
 
-\section{Experiment: Different Sample Sizes}\label{sec:samplesize}
+\section{Experiment: Sufficient Sample Sizes}\label{sec:samplesize}
 
 This section compares how a difference sample size impact the test error for each possible combination of models and datasets. With this experiment, we intend to examine how different sizes in training data affect the test error for the respective combination. Since less samples in the training data corresponds to lower training times, we use the results of this experiment for the subsequent hyperparameter optimization and the noise analysis to speed our experimental procedure up. For our linear model and the considered ensembles, we consider 100 training runs with every run corresponding to a sample subset size $ \{2000, 4000, \dots, 200.000\} $. For each model, we set the parameters manually since we did not conduct hyperparameter optimization yet. 
 
@@ -76,9 +76,10 @@ The exact optimal parameter configuration for GBDT on both data sets is depicted
 	\subfigure[Optimal configurations]{\includegraphics[width=\linewidth]{figures/HPO/GBDT_ResultsTable_HPO_Optimal.pdf}}
 	\subfigure[Training history on crafted data]{\includegraphics[width=0.49\linewidth]{../Implementation/optunaStudies/GBDT_Raw_Optim_Metric.png}}
 	\subfigure[Training history on crafted data]{\includegraphics[width=0.49\linewidth]{../Implementation/optunaStudies/GBDT_Crafted_Optim_Metric.png}}
-	\caption{Optimal configurations and training history for GBDT}
+	\caption{Optimal configurations and training histories for GBDT}
 	\label{fig:GBDT_Optimal}
 \end{figure}
+
 Figure \ref{fig:GBDT_ParallelPlot} depicts the parameter configurations of each optimization epoch in form of a parallel coordinate plot for GBDT on raw data in panel (a) and on crafted data in panel (b). Except the vertical gray line one the very left in the plots, each vertical gray axis represents the values ranging within the defined intervall of its corresponding parameter, whereas the very left line represents the axis for the objective values. The lines connecting all the parameter axes represent the parameter configurations of the optimization epochs. The bluer a line, the better the objective value - in our case the mean squared error. 
 At first glance, it can be seen directly that the parameter configurations of both plots for good predictive performance are quite similar. For both sets, the mean squared error is minimized when we roughly use two-thirds of the features for each GBDT iteration (feature\_fraction, feature\_fraction\_bynode). Less test error is more likely achieved when we allow the algorithm to build rather deep trees up to a maximal depth of 50 while constraining the tree splitting process by specifying a lower bound of around 200 for the minimal amount of samples a node must contain in order to split it further (min\_child\_samples). We can furthermore see that a better objective value is attained when using nearly all samples considered for a GBDT iteration rather than applying (subsampling) and learning rates ranging between 0.03 to 0.05 (learning\_rate).
 
@@ -126,7 +127,7 @@ Figure \ref{fig:RF_Optimal} depicts the optimal parameter configurations resulti
 	\subfigure[Optimal configurations]{\includegraphics[width=\linewidth]{figures/HPO/RF_ResultsTable_HPO_Optimal.pdf}}
 	\subfigure[Training history on raw data]{\includegraphics[width=0.49\linewidth]{../Implementation/optunaStudies/RF_Raw_Optim_Metric.png}}
 	\subfigure[Training history on crafted data]{\includegraphics[width=0.49\linewidth]{../Implementation/optunaStudies/RF_Crafted_Optim_Metric.png}}
-	\caption{Optimal configurations and training history for Random Forest}
+	\caption{Optimal configurations and training histories for Random Forest}
 	\label{fig:RF_Optimal}
 \end{figure}
 Figure \ref{fig:RF_ParallelPlot} depicts the parallel coordinate plots for Random Forest on the raw and crafted features in panel (a) and (b) respectively. We observe that the distribution of parameter configurations achieving a comparably well objective value, is quite similar. A minimized objective value is achieved when the feature fraction and the feature fraction by node used for each estimator range between 0.8 and 1. Further, the maximal depth constraint set at a rather high value ranging between 50 and 60 seems to be optimal according to the HPO. The number of leaves each estimator has at the end of the iteration lies at roughly 1050 in most optimal cases. For subsampling, we observe that subsampling fraction greater than 90\% in a frequency of 6 goes is correlated to a minimized test error.
@@ -148,8 +149,25 @@ The hyperparameter importances for Random Forest on the raw and the crafted data
 \end{figure} 
  
 \section{Experiment: Adding Noise}\label{sec:noise}
-
-
+In this experiment, we test the robustness of our models on full sample size. We do this by randomly sampling values from the gaussian distribution
+\begin{equation}
+	p(x) = \dfrac{1}{\sqrt{2\pi\sigma^{2}}} e^{-\dfrac{(x-\mu)^2}{2\sigma^2}}
+\end{equation}
+with a mean $ \mu $ of 1 and standard deviations $ \sigma \in \Sigma $ in the set of $ \{0.1, 0.2, \dots, 1.0\} $ and adding the resulting value, which is the noise, to the order time, the meal preparation time and the PoM-based expected time of arrival. A higher standard deviation is understood as a wider spread of the distribution, and vice versa. The GBDTs and Random Forests were trained on with the optimal parameter configurations resulting from the HPO. Figure \ref{fig:noise} depicts the model performances for different levels of noise on both datasets. The x-axis represents the standard deviation, the y-axis shows the mean squared test error. As opposed to the GBDT and Random Forest, we  At first glance, we observe that a higher test error is associated with higher levels of noise for every test instance. GBDT and Random Forest trained on the raw data produce the best results. For them, we observe quite similar behaviour when trained on the different datasets: While both start out fairly close to the value attained in figure \ref{fig:GBDT_Optimal} and \ref{fig:RF_Optimal} with a mean squared error of approximately less than 26 and 28 respectively on the raw set, both show a monotonous increase in test error up to approximately 30 for the highest noise level considered. However, we get significantly different results when we train GBDT and Random Forest on the crafted set. For both models, the MSE starts out with a mean squared error around 30, which is noticeably less than the mean squared error achieved with the configurations for the crafted set depicted in \ref{fig:GBDT_Optimal} and \ref{fig:RF_Optimal}, and rise up to slightly more than 36. We thus conclude that the models trained upon the raw set are significantly more robust when noise is induced. Our linear model produced results that are highly interesting: Despite both (c) and (d) visualizing quite similar looking exponential increases, the resulting MSEs for the different noise levels could not be further away from each other. When trained on raw data, linear regression levels off between 30-31 and is therefore the most robust model in our comparison since its variability in results is by far the lowest. When trained on crafted data however, a consideration of linear regression as a prediction model is no longer an option as the MSE skyrockets to 1200 at a noise level of 1.0. We further note that linear regression on the raw data consistently produces better results than GBDT and Random Forest when trained on the crafted data. 
+Wrt. to the robustness of our models, we conclude the following:
+\begin{description}[font=$\bullet$\scshape\bfseries]
+	\item Whether we use the raw or the crafted data set for training, GBDT and Random Forest produces the best results. On raw data, GBDT is ahead of random forest, whereas both perform nearly equally good when trained on the crafted data set. 
+	\item Linear Regression is robust to noise the most on the raw data. Surprisingly, the complete opposite is true when we train linear regression on the crafted data. 
+\end{description}
+\begin{figure}[h]
+	\centering
+	\subfigure[For GBDT]{\includegraphics[width=0.49\linewidth]{../Implementation/NoiseStudies/GBDT_Noise.png}}
+	\subfigure[For Random Forest]{\includegraphics[width=0.49\linewidth]{../Implementation/NoiseStudies/RF_Noise.png}}
+	\subfigure[For Linear Regression (Raw)]{\includegraphics[width=0.49\linewidth]{../Implementation/NoiseStudies/LR_Raw_Noise.png}}
+	\subfigure[For Linear Regression (Crafted)]{\includegraphics[width=0.49\linewidth]{../Implementation/NoiseStudies/LR_Crafted_Noise.png}}
+	\caption{Performance of models for different noise levels on both datasets}
+	\label{fig:noise}
+\end{figure}
 
 
 

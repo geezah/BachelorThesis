@@ -120,14 +120,10 @@ where $ \alpha $ is the learning rate, and $ I(\cdot) $ is the indicator functio
 Hence, we use the GBDT implemetation of \textit{lightGBM}.
 
 
-
-\subsection{Neural Networks for Regression}\label{sec:nn}
-
-
 \section{Feature Selection}\label{sec:fs}
 
-A significant role for the success of machine learning models in general plays the data we gather and how we make sense of it - i.e. how we turn raw data into informative features - since machine learning models can only learn from the data they receive for the learning process. Gerenally, we want to maximize the amount of informative features that predict our target comparably good while minimizing the amount of features we use at the same time. High-dimensional feature spaces are not desired as training time exponentially increases and prediction performance decreases.
-Therefore, selecting and engineering informative features is not to be underestimated. 
+A significant role for the success of machine learning models in general plays the data we gather and how we make sense of it - i.e. how we turn raw data into informative features - since machine learning models can only learn from the data they receive for the learning process. Feature selection seeks two conflicting objectives: Minimize the amount of used features while maximizing the accuracy. Balancing this trade-off is crucial, since an increase in features leads to exponential increase in training time, but a decrease in features can mean that strong predictors are excluded although they would significantly contribute to the objective. Therefore, we intend to analyze how our models work on data sets with different features and especially of different dimensionality. We select our features with the two aforementioned conflicting objectives in mind.  
+Since we operate on the same problem and the same raw data as \cite{Hildebrandt2020_EAT}, we employ the data model proposed in their paper in our work too. As we have seen in the literature review, their data model includes temporal, spatial, routing and processing features and is of low dimensionality with a feature space of 12 features. 
 
 \section{Design of Experiments}
 
