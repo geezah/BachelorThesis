@@ -99,19 +99,21 @@ Having found the optimal split variable and split threshold, this procedure - al
 
 However, decision trees have several shortcomings. First of all, decision trees tend to do a good job of predicting labels for samples used as training data. When it comes to independent samples, i.e. test data, they are performing poorly, which indicates high variance and overfitting. We thus turn to  decision tree ensembles, which basically combine several regression trees and aim to reduce the variance of the decision trees in their respective own ways. 
 The two ensemble learning approaches relevant for our work are \textbf{bagging}, shorthand for \textit{bootstrap aggregating}, and \textbf{boosting}. 
-Algorithms belonging to bagging first create bootstrap data sets $ S^{*} $ by randomly drawing samples with replacement from training data S, fit each $ S^{*b} $ a hypothesis $ h^{*b}(x) $ and take the average across all hypotheses as the bagging estimate: 
-\begin{equation}\label{average}
-	h_{bag}(x) = \dfrac{1}{B} \sum_{b=1}^{B} h^{*b}(x).
-\end{equation}
+Algorithms belonging to bagging first create bootstrap datasets by randomly drawing samples with replacement from training data, fit each bootstrapped set a hypothesis and take the average across all hypotheses as the bagging estimate.
+
 Since decision trees are low in bias and high in variance due to their ability to capture complex mappings, bagging is motivated by the idea that averaging across all base learners benefits from the strong law of large numbers and therefore leads to a reduction in variance. 
 Random Forests belong to the class of bagging algorithms and work as follows:
 For an arbitrarily chosen and fixed amount of estimators $ B \in \mathbb{N}$, we create bootstrap data sets $ S^{*b} $ with $ b = 1, \dots, B $ of size $ N $ from the training data $ S $. The b-th regression tree $ T_b $ is grown to $ S^{*b} $ by first selecting a subset of $ m $ features with $ m \leq p $, and then growing a regression tree according to CART as described above.
-Having grown each bootstrap data set $ S^{*b} $ its own regression tree $ T_b $, random forest for regression averages across all hypotheses of each regression tree by applying equation \ref{average} and returns
+Having grown each bootstrap data set $ S^{*b} $ its own regression tree $ T_b $, random forest for regression averages across all hypotheses of each regression tree:
 \begin{equation}
 h^{B}_{rf}(x) = \dfrac{1}{B} \sum_{b=1}^{B} T_b(x)
 \end{equation}
 as the bagging estimate.
-On the other side of tree-based ensembles are the algorithms that use...[TODO]
+\newline 
+\newline
+TODO: BOOSTING EINLEITEN BEVOR ES IN DIE DETAILS FÜR GBDT GEHT
+\newline
+\newline
 The first step in GBDT is to initialize a model with a constant $ \hat{c} $ that minimizes the overall loss across all training samples.
 \begin{equation}
 h_{0}(x) =  \argmin_{\hat{c}} \sum_{i=1}^n L(y_i,\hat{c}) \label{gbdt_step1}
