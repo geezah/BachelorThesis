@@ -1,43 +1,63 @@
 
 
 \chapter{Methodology}
-This chapter presents our methodogolical approach and describes its elements in detail. Section 4.1 gives an overview of the methodological approach used to evaluate and compare the models. 
-Section 4.2 gives an introduction to supervised learning and presents the different models considered in the comparison in detail.
-Section 4.3 focusses on feature selection techniques applied in our computational study.
+This chapter presents our methodogolical approach and describes its elements in detail. 
+Section 4.1 our design of experiments. 
+Section 4.2 presents considered data models and their features.
+Section 4.3 gives an introduction to supervised learning and presents the different models considered in the comparison in detail.
 
 \section{Design of Experiments}\label{sec:design}
 
 The primary goal of this study is to find the most suitable model for the given arrival time estimation problem. 
-To attain the best possible solution for this problem, it is necessary to analyze the presented mdoels from different points of view since it is not always clear which model does the best job in predicting arrival times as our literature review shows. 
-While \cite{Zhu2020_OFCTE_DL} use deep learning as a means of estimating arrival respectively delivery times for restaurant meal delivery, \cite{Hildebrandt2020_EAT} turn to GBDTs on a quite similar problem setting, whereas \cite{Liu2018_LM_PLM} conclude that linear models are the better choice overall. 
+To attain the best possible solution for this problem, it is necessary to analyze the considered models from different points of view since it is not always clear which model does the best job in predicting arrival times as our literature review shows. 
+While \cite{Zhu2020_OFCTE_DL} use deep learning as a means of estimating arrival respectively delivery times for restaurant meal delivery, \cite{Hildebrandt2020_EAT} turn to GBDTs on a quite similar problem setting, whereas \cite{Liu2018_LM_PLM} conclude that linear models are the better choice overall. s
 For that reason, we will conduct experiments that will allow us to analyze the behaviour of the considered models and their parameters. 
 
 Further challenge also lies in the selection of a well suited data model for the given problem which is highly non-trivial. 
 Almost every related work shown in the literature review crafts features manually with the help of human domain expertise, and rightfully so: Raw data is usually characterized by high dimensionality and sparse information. We aim to find the right balance for the two conflicting objectives of minimizing the feature space and thus reducing the dimensionality on the one hand, while maximizing the informative value each considered feature contributes to the objective on the other hand. 
-To demonstrate how models perform on different datasets and to find out which data model delivers more promising results, we decide to conduct our experiments upon the two data models presented in section \ref{sec:fs}, with one data model being high in dimensionality and the other one having a significantly smaller feature space.
-In real-world scenarios, data can be corrupted by external influences, either caused by human or machine error. 
-To see how those corruptions affect the model performances, we analyze supervised learning models also wrt. their robustness. 
+To demonstrate how models perform on different data model and to find out which data model delivers more promising results, we decide to conduct our experiments upon the two data models presented in section \ref{sec:fs}, with one data model being high in dimensionality and the other one having a significantly smaller feature space.
+
+In real-world scenarios, data can be corrupted by external influences, either caused by human or machine error. To see how those corruptions affect the model performances on both considered data models, we analyze supervised learning models also wrt. their robustness. 
 
 Our experimental pipeline is designed as follows:
 \begin{enumerate}
 	\item \textbf{Finding Sufficient Sample Sizes:} The more data is available for training, the better the generalization will be. However, this conflicts with training times since there are more calculations to make when there is more data. Therefore, we seek a good balance for the tradeoff between sample size and accuracy. We do this by defining a number of training runs and assigning each run sample sizes from an interval with evenly spaced values. This experiment returns the sufficient sample size for each model, and additionally gives us information on how the models perform on solely manually set hyperparameters.  
 	\item \textbf{Hyperparameter Analysis:} Tree-based ensembles are complex in their structure and can achieve great performance when their parameters are tuned properly. For that reason, we intend to conduct hyperparameter optimization (HPO) for GBDT and Random Forest. We will first specify the hyperparameters we consider to optimize and then specify their respective search space. The values from these evenly-spaced search space intervals are sampled via the \textbf{C}ovariance \textbf{M}atrix \textbf{A}daption \textbf{E}volution \textbf{S}trategy, or in short \textbf{CMA-ES}. \textit{CMA-ES} follows a simple principle: The probability of samples from previously succesful optimization steps being drawn again is positively correlated to the contribution of those samples to the objective. For further information on \textit{CMA-ES}, the reader is referred to \cite{hansen2016cma}. To speed up the optimization process, we will use \textbf{hyperband pruning}, a bandit-based optimization approach presented in \cite{li2018hyperband} that prunes unpromising trials early. 
-	Having done the HPO, we now can detect which parameter configurations deliver the best results, and analyze the importances of the optimized hyperparameters for each GBDT and Random Forest optimization on both datasets via \textbf{fANOVA}, a hyperparameter evaluation algorithm presented in \cite{fANOVA}. \textit{fANOVA} calculates feature importances by fitting a random forest regression model to the optimal parameter configuration that results of the HPO with which it aims to predict the corresponding objective value. The relative importances provide information about the parameter variances. A higher value is associated with a higher variance, meaning that a change of the parameter setting will have a greater impact on the prediction performance compared to parameters of low relative importance. Thereby, we can assess which parameters impact the model significantly and which parameters are less significant, and especially how the importances differ for the two data sets. By that, we hope to get a fine-tuned model that maximizes prediction quality on one hand, and intuition for suitable parametrizations on the other hand.
-	\item \textbf{Noise Induction}: To test the robustness of our models, we induce noise on a selected group of temporal features present in both datasets. We further vary the levels of noise to see how an increase of noise impacts the model performances. The smaller a examined model varies in accuracy on different noise levels, the more robust it is. The noise we add to each feature is sampled from a normal gaussian distribution. 
+	Having done the HPO, we now can detect which parameter configurations deliver the best results, and analyze the importances of the optimized hyperparameters for each GBDT and Random Forest optimization on both datasets via \textbf{fANOVA}, a hyperparameter evaluation algorithm presented in \cite{fANOVA}. \textit{fANOVA} calculates feature importances by fitting a random forest regression model to the optimal parameter configuration that results of the HPO with which it aims to predict the corresponding objective value. The relative importances provide information about the parameter variances. A higher value is associated with a higher variance, meaning that the model is sensitive to changes for parameters with high relative importance. Thereby, we can assess which parameters impact the model significantly and which parameters are less significant, and especially how the importances differ for the two data sets. By that, we hope to get a fine-tuned model that maximizes prediction quality on one hand, and intuition for suitable parametrizations on the other hand.
+	\item \textbf{Noise Induction}: To test the robustness of our models, we induce noise on a selected group of temporal features present in both datasets. We further vary the levels of noise to see how an increase of noise impacts the model performances. The smaller a examined model varies in accuracy on different noise levels, the more robust it is. The noise we add to each feature is sampled from a Gaussian distribution. 
 \end{enumerate}
-We will specify the configuration details for each experiment in the respective sections in chapter \ref{chap:comp}.
-\section{Algorithms}
-This section shortly introduces the statistical and conceptual framework of supervised learning, and then proceeds with the detailed examination of how each chosen algorithm included in our comparison, namely linear regression, and the tree-based ensembles, works. Since our comparison involves the conduction of several experiments that are quite time consuming due to limitations in hardware, we do not consider a deep learning approach in our comparison. 
+We will specify the configuration details for each experiment in the corresponding sections in chapter \ref{chap:comp}. 
 
-\subsection{Framework of supervised learning}
-As inputs, supervised learning algorithms receive \textbf{training data} in form of a finite set $ S = \{({x}_{2}, y_2), ({x}_{2}, y_2), \dots, ({x}_{n}, y_n)\}$ of N pairs from $ \mathcal{X} \times \mathcal{Y} $ where $ x_i $ is a \textbf{sample} described by $ p $ features, and is associated to it's corresponding \textbf{label} $ y_i $.
-They return a \textbf{hypothesis} $ h: \mathcal{X} \to \mathcal{Y} $ that aims to predict the corresponding label $ y \in Y $ for any $ x \in X $, but especially for unseen samples or i.e. \textbf{test data} $ x \notin S $.
+\section{Feature Selection}\label{sec:fs}
+
+A significant role for the success of machine learning models in general plays the data we gather and how we make sense of it - i.e. how we turn raw data into informative features - since machine learning models can only learn from the data they receive for the learning process. Feature selection seeks two conflicting objectives: Minimize the amount of used features while maximizing the accuracy. Balancing this trade-off is crucial, since high dimensional data sets cause a significant increase in training times and are hard to scale and rahter inefficient. Further, the more features there are, the higher is the probability of having features in the feature space that actually decrease the performance of models. But on the other hand, a decrease in features can at the same time mean that possibly strong predictors are excluded from the feature space although they would significantly contribute to the objective. Therefore, we intend to analyze how our models work on data sets with different features and especially of different dimensionality.   
+
+Since we operate on the same problem and the same raw data as \cite{Hildebrandt2020_EAT}, we employ the data model resulting from their feature selection done for the offline approach also in our work as the low-dimensional data model we have spoken of in section \ref{sec:design}. As we have seen in the literature review, their data model includes temporal, spatial, routing and processing features and is of low dimensionality with a feature space of 12 features.
+In their data model, they use the customer order time as well as the sum of expected durations for each action in the customer route as temporal features. Restaurant and customer locations belong to the class of spatial features \cite{Hildebrandt2020_EAT} use. They further include the number of total stops, pick-up stops and delivery stops to capture the structure of the delivery route to the customer as well as temporal information on time shifts that can occur due to bundling or past insertions. Last but not least, \cite{Hildebrandt2020_EAT} include the meal preparation time as a feature that captures the stochastic processing times the arrival time is impacted by.
+
+As we have stated in section \ref{sec:design}, high-dimensional datasets are mainly not desirable due to increase in training time, scalability, and potentially decreasing accuracy. However, allowing high dimensionality enables us to include information that represent the four feature classes and thus the state of the RMDPEAT very detailled. For the high-dimensional data model, we therefore omit the routing features that count the number of stops, keep all the other 9 features \cite{Hildebrandt2020_EAT} used, and add the following features that are already given in the original raw data model instead:
+\begin{description}[font=$\bullet$\scshape\bfseries]
+	\item \textbf{vehicle\_route\_to\_customer\_pos\_\{x,y\}\_i}: These two features present the target position for action $ i \in \{0, 1, \dots, 23\}$ given by x- and y-coordinates (in kilometers) respectively. 
+	\item  \textbf{vehicle\_route\_to\_customer\_action\_i}:
+	This feature represents the type of action $ i $. The driver can either drive to either a customer (=1) or restaurant location (=3), or wait at either a customer (=2) or restaurant location (=4). Further, we observe a value of 0 for this feature when the driver finishes the delivery to the targeted customer. When this happens, the target positions presented previously and the duration of the action presented next are also no longer tracked. 
+	\item
+	\textbf{vehicle\_route\_to\_customer\_time\_action\_i}: This feature denotes the duration of action $ i $.
+\end{description}
+By that, we get additional temporal, spatial, routing and processing information since all actions and their properties are known. Altogether, the high-dimensional feature space contains 109 features. The original raw data model has more than 1000 features that gave additional information about the actions that allowed a sample to capture the whole RMDPEAT state. Our feature selection is motivated by the idea that by narrowing down the selection to features that are directly related to the customer request that technically speaking corresponds to a certain sample, we get all the information that might be somehow relevant for this request. Since the data model of \cite{Hildebrandt2020_EAT} can be engineered with the data model we just presented, we will from now on refer to former as the \textit{crafted data model}, and to our propose as the \textit{raw data model}.
+
+\section{Algorithms}
+This section shortly introduces first the statistical  and upon that the conceptual framework of supervised learning, and then proceeds with the detailed examination of how each chosen algorithm included in our comparison, namely linear regression, and the tree-based ensembles, works. Since our comparison involves the conduction of several experiments that are quite time consuming due to limitations in hardware, we do not consider a deep learning approach in our comparison. 
+
+\subsection{Framework of Supervised Learning}
+
+For the following definition of the statistical framework of supervised learning, we refer to \cite{SLFoundations}. As inputs, supervised learning algorithms receive \textbf{training data} in form of a finite set $ S = \{({x}_{2}, y_2), ({x}_{2}, y_2), \dots, ({x}_{n}, y_n)\}$ of N pairs from $ \mathcal{X} \times \mathcal{Y} $ where $ x_i $ is a \textbf{sample} described by $ p $ features, and is associated to it's corresponding \textbf{label} $ y_i $.
+They return a \textbf{model} $ h: \mathcal{X} \to \mathcal{Y} $ that aims to predict the corresponding label $ y \in Y $ for any $ x \in X $, but especially for unseen samples or i.e. \textbf{test data} $ x \notin S $.
 We further assume a joint probability distribution $ P $ over $ \mathcal{X} $ and $ \mathcal{Y} $ each pair is identically and independently distributed according to. 
 Thus, $ h(x) $ can be treated as a random variable being conditionally distributed with $ P(y | x) $ for a given $ x $, and not as a deterministic function of $ x $. 
 The prediction accuracy of $ h $ is measured with a  \textbf{loss function} $ L : Y \times Y \to \mathbb{R}^{\geq 0}$.
 For a given pair $ ({x}_i, y_i) $, the loss function $ L(y_i, \hat{y}_i) $ represents how far a prediction $ \hat{y_i} $ for the i-th sample $ x_i $ is away from the actual corresponding label $ y_i $. 
 The average loss across all $ (x,y) \in S $ is called \textbf{empirical risk}.
-Thus, the goal of a supervised learning algorithm is to find the optimal hypothesis $ h^* $ for which the overall empirical risk is minimal: 
+Thus, the goal of a supervised learning algorithm is to find the optimal model $ h^* $ for which the overall empirical risk is minimal: 
 \begin{equation}
 	h^* = \argmin_{h \in H} \dfrac{1}{n} \sum_{i=1}^{n} L(h(x_i), y_i).
 \end{equation}
@@ -47,11 +67,12 @@ While regression is used to predict continuous targets $ Y = \mathbb{R} $, class
 Although various supervised learning models use different mathematical procedures to predict targets, all of them follow the principle of induction, meaning that general rules are inductively inferred from training data. This is also called \textbf{generalization}.  
 In order for a model to generalize well, two phenomena have to be avoided: \textbf{Underfitting} and \textbf{Overfitting}. 
 Poor predictions on both the training and test data indicate that a model is underfitted. Very good prediction accuracy for training samples $ x \in S $, but poor accuracy on test samples $ x \notin S $ indicate that a model is overfitted.
-In supervised learning, this dilemma is known as the \textbf{bias-variance tradeoff}. 
+In supervised learning, this dilemma is known as the \textbf{bias-variance trade-off}. 
 An overfitted model is characterized by rather being low in bias and high in variance, whereas the same goes vice versa for underfitted models. Models high in bias and low in variance are rather simple, but cannot capture complex mappings due to high bias, e.g. linear models. On the other hand, models low in bias and high in variance are able to capture complex patterns in the data which is the reason why they fit given training data $ S $ very well. The problem with models high in variance arises when predictions are performed on independent samples $ x \notin S $, because the better the model is fitted to $ S $, the higher becomes the variability of prediction performance on independent samples. 
 
-A good mechanism that counters overfitting is the practice of \textbf{early stopping}. Early stopping is activated when an algorithm performs worse at the current iteration $ k \in \mathbb{N} $ than it did at the previous one $ k-1 $. The mechanism tracks the loss for the next $ s \in \mathbb{N} $ iterations. If a better loss compared to the loss attained at $ k-1 $ improves at any iteration in the interval $ [k, k+s] $, early stopping terminates and the training goes on. When the loss, again compared to the loss attained at $ k-1 $, never improves until iteration $ k+s $, the training is stopped early. 
-All in all, the key challenge lies in finding a model balancing this tradeoff well and thus having good and consistent prediction quality especially on test data. For that reason, we consider diverse models covering the wide spectrum of model complexities to discover the most suitable options for the EAT. 
+A good mechanism that counters overfitting is the practice of \textbf{early stopping}. Early stopping is activated when an algorithm performs worse at the current iteration $ k \in \mathbb{N} $ than it did at the previous one $ k-1 $. The mechanism tracks the loss for the next $ s \in \mathbb{N} $ iterations. If a better loss compared to the loss attained at $ k-1 $ improves at any iteration in the interval $ [k, k+s] $, early stopping terminates and the training goes on. When the loss, again compared to the loss attained at $ k-1 $, never improves until iteration $ k+s $, the training is stopped early.
+ 
+All in all, the key challenge lies in finding a model balancing this tradeoff well and thus having good and consistent prediction quality especially on test data. For that reason, we consider diverse models covering the wide spectrum of model complexities to discover the most suitable options for the EAT. As in \cite{Hildebrandt2020_EAT}, each model in this work learns the residual of the sum of expected durations for each action in the customer route from the actual arrival time.
  
 \subsection{Linear Regression}
 
@@ -62,7 +83,7 @@ Let $ \textbf{X}^{T} = (X_1, X_2, \dots, X_p) $ denote the input matrix containi
 h(X) = w_0 + \sum_{j=1}^{p} X_jw_j
 \end{equation}
 with coefficient $ w_0 $ representing the bias term. The feature vectors $ X \in \textbf{X}^{T} $ can be of any form and be arbitrarily transformed since linear models only assume linearity in their coefficients, and not in their inputs.
-A common method of approximating the hypothesis in linear regression is \textit{least squares}, which seeks to find parameters that minimize the squared differences across all N pairs the training set $ S $:
+A common method of fitting the data to a model in linear regression is \textit{least squares}, which seeks to find parameters that minimize the squared differences across all N pairs the training set $ S $:
 \begin{equation}\label{eq:argminlinear}
 \argmin_{w} \sum_{i=1}^{N}(y_i - w_0 - \sum_{j=1}^{p} x_{ij}w_j)^2. 
 \end{equation}
@@ -75,7 +96,7 @@ We will use the linear regression algorithm implemented in \textit{Scikit-Learn}
 \subsection{Tree-based Ensembles}
 
 In the following, we will present the tree-based ensembles we consider in our comparison. We again refer to the explanations done in \cite{friedman2001elements}.
-As shown in the literature review, tree-based ensembles like GBDTs and Random Forests are popular in the field of arrival time estimation. Ensemble learning is motivated by the idea that \textit{base learners} (synonym to \textit{model} or \textit{hypothesis}) produce rather inaccurate results on their own, but form an accurate prediction model when they are combined. For tree-based ensembles, decision trees are used as base learners. 
+As shown in the literature review, tree-based ensembles like GBDTs and Random Forests are popular in the field of arrival time estimation. Ensemble learning is motivated by the idea that \textit{base learners} (synonym to \textit{model}) produce rather inaccurate results on their own, but form an accurate prediction model when they are combined. For tree-based ensembles, decision trees are used as base learners. 
 Generally speaking, decision trees partition the feature space into distinct regions and then, in the case of regression, fit a real-valued prediction to each region. 
 A single decision tree is given by
 \begin{equation}
@@ -99,19 +120,19 @@ Having found the optimal split variable and split threshold, this procedure - al
 
 However, decision trees have several shortcomings. First of all, decision trees tend to do a good job of predicting labels for samples used as training data. When it comes to independent samples, i.e. test data, they are performing poorly, which indicates high variance and overfitting. We thus turn to  decision tree ensembles, which basically combine several regression trees and aim to reduce the variance of the decision trees in their respective own ways. 
 The two ensemble learning approaches relevant for our work are \textbf{bagging}, shorthand for \textit{bootstrap aggregating}, and \textbf{boosting}. 
-Algorithms belonging to bagging first create bootstrap datasets by randomly drawing samples with replacement from training data, fit each bootstrapped set a hypothesis and take the average across all hypotheses as the bagging estimate.
+Algorithms belonging to bagging first create bootstrap datasets by randomly drawing samples with replacement from training data, fit each bootstrapped set a model and take the average across all models as the bagging estimate.
 
 Since decision trees are low in bias and high in variance due to their ability to capture complex mappings, bagging is motivated by the idea that averaging across all base learners benefits from the strong law of large numbers and therefore leads to a reduction in variance. 
 Random Forests belong to the class of bagging algorithms and work as follows:
 For an arbitrarily chosen and fixed amount of estimators $ B \in \mathbb{N}$, we create bootstrap data sets $ S^{*b} $ with $ b = 1, \dots, B $ of size $ N $ from the training data $ S $. The b-th regression tree $ T_b $ is grown to $ S^{*b} $ by first selecting a subset of $ m $ features with $ m \leq p $, and then growing a regression tree according to CART as described above.
-Having grown each bootstrap data set $ S^{*b} $ its own regression tree $ T_b $, random forest for regression averages across all hypotheses of each regression tree:
+Having grown each bootstrap data set $ S^{*b} $ its own regression tree $ T_b $, random forest for regression averages across all regression tree models:
 \begin{equation}
 h^{B}_{rf}(x) = \dfrac{1}{B} \sum_{b=1}^{B} T_b(x)
 \end{equation}
 as the bagging estimate.
 \newline 
 \newline
-TODO: BOOSTING EINLEITEN BEVOR ES IN DIE DETAILS FÜR GBDT GEHT
+TODO: BOOSTING
 \newline
 \newline
 The first step in GBDT is to initialize a model with a constant $ \hat{c} $ that minimizes the overall loss across all training samples.
@@ -137,21 +158,3 @@ Given this, we now update the former weak learner with the new one:
 \end{equation}
 where $ \alpha $ is the learning rate, and $ I(\cdot) $ is the indicator function.
 Hence, we use the GBDT implemetation of \textit{lightGBM}.
-
-
-\section{Feature Selection}\label{sec:fs}
-
-A significant role for the success of machine learning models in general plays the data we gather and how we make sense of it - i.e. how we turn raw data into informative features - since machine learning models can only learn from the data they receive for the learning process. Feature selection seeks two conflicting objectives: Minimize the amount of used features while maximizing the accuracy. Balancing this trade-off is crucial, since high dimensional data sets cause a significant increase in training times and are hard to scale and rahter inefficient. Further, the more features there are, the higher is the probability of having features in the feature space that actually decrease the performance of models. But on the other hand, a decrease in features can at the same time mean that possibly strong predictors are excluded from the feature space although they would significantly contribute to the objective. Therefore, we intend to analyze how our models work on data sets with different features and especially of different dimensionality.   
-
-Since we operate on the same problem and the same raw data as \cite{Hildebrandt2020_EAT}, we employ the data model resulting from their feature selection done for the offline approach also in our work as the low-dimensional data model we have spoken of in section \ref{sec:design}. As we have seen in the literature review, their data model includes temporal, spatial, routing and processing features and is of low dimensionality with a feature space of 12 features.
-In their data model, they use the customer order time as well as the sum of expected durations for each action in the customer route as temporal features. Restaurant and customer locations belong to the class of spatial features \cite{Hildebrandt2020_EAT} use. They further include the number of total stops, pick-up stops and delivery stops to capture the structure of the delivery route to the customer as well as temporal information on time shifts that can occur due to bundling or past insertions. Last but not least, \cite{Hildebrandt2020_EAT} include the meal preparation time as a feature that captures the stochastic processing times the arrival time is impacted by.
-
-As we have stated in section \ref{sec:design}, high-dimensional datasets are mainly not desirable due to increase in training time, scalability, and potentially decreasing accuracy. However, allowing high dimensionality enables us to include information that represent the four feature classes and thus the state of the RMDPEAT very detailled. For the high-dimensional data model, we therefore omit the routing features that count the number of stops, keep all the other 9 features \cite{Hildebrandt2020_EAT} used, and add the following features that are already given in the original raw data model instead:
-\begin{description}[font=$\bullet$\scshape\bfseries]
-	\item \textbf{vehicle\_route\_to\_customer\_pos\_\{x,y\}\_i}: These two features present the target position for action $ i \in \{0, 1, \dots, 23\}$ given by x- and y-coordinates (in kilometers) respectively. 
-	\item  \textbf{vehicle\_route\_to\_customer\_action\_i}:
-	This feature represents the type of action $ i $. The driver can either drive to either a customer (=1) or restaurant location (=3), or wait at either a customer (=2) or restaurant location (=4). Further, we observe a value of 0 for this feature when the driver finishes the delivery to the targeted customer. When this happens, the target positions presented previously and the duration of the action presented next are also no longer tracked. 
-	\item
-	\textbf{vehicle\_route\_to\_customer\_time\_action\_i}: This feature denotes the duration of action $ i $.
-\end{description}
-By that, we get additional temporal, spatial, routing and processing information since all actions and their properties are known. Altogether, the high-dimensional feature space contains 109 features. The original raw data model has more than 1000 features that gave additional information about the actions that allowed a sample to capture the whole RMDPEAT state. Our feature selection is motivated by the idea that by narrowing down the selection to features that are directly related to the customer request that - technically speaking - corresponds to a certain sample, we get all the information that might be somehow relevant for this request. Since the data model of \cite{Hildebrandt2020_EAT} can be engineered with the data model we just presented, we will from now on refer to former as the \textit{crafted} data model, and to our propose as the \text{raw} data model.

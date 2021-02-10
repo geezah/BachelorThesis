@@ -6,7 +6,7 @@ Section \ref{sec:samplesize} examines how different samples sizes used for train
 In Section \ref{sec:hpo}, we optimize model hyperparameters and seek to get better intuition when for parameter configuration by analyzing parameters considered for our optimization.
 Last but not least, section \ref{sec:noise} demonstrates how noise affects predictive performance of our models.
 
-\section{Data exploration}\label{sec:data}
+\section{Data Exploration}\label{sec:data}
 The available data set is provided by \cite{Hildebrandt2020_EAT} who create a dataset using the RMDP instances originally used in \cite{UlmerRMDP}. It comprises 850.469 samples with 23.341 unique customer locations, a delivery fleet of 15 vehicles and 15 unique restaurant locations. The temporal and spatial distribution of the orders is depicted in figure \ref{fig:dists}. 
 Panel (a) of figure \ref{fig:dists} shows the order behaviour of customers. The x-axis denotes the day time in minutes, the y-axis denotes the relative frequency of incoming customer orders for a given day time on the y-axis. We can observe that the order time behaviour across all customers follows a bimodal gaussian distribution. The order frequency peaks at around 12:00 a.m (roughly 700 minutes of day time) and again around 6.00 p.m (roughly 1100 minutes of day time). This indicates that the probability of an order taking place during lunch or dinner time is relatively high.  
 Panel (b) of figure \ref{fig:dists} shows the spatial distribution of customer and restaurant locations. The x- and y-axis show the location longitudes and the latitudes respectively. The blue points represent customers, the orange points depict the restaurant locations. There we can see that the majority of restaurants is located where the density of customer locations is rather high. 
@@ -14,7 +14,7 @@ Panel (b) of figure \ref{fig:dists} shows the spatial distribution of customer a
 	\centering
 	\subfigure[Request arrival time distribution]{\includegraphics[width=0.49\linewidth]{../Implementation/DataDescription/order_time_dist.png}}
 	\subfigure[Spatial distributions]{\includegraphics[width=0.49\linewidth]{../Implementation/DataDescription/spatial_dist.png}}
-	\caption{Spatial and temporal distributions}
+	\caption{Spatial and Temporal Distributions}
 	\label{fig:dists}
 \end{figure}
  
@@ -24,7 +24,7 @@ Since arrival times are impacted by uncertainty in meal preparation times, we ta
 	\centering
 	\subfigure[Delivery delay distribution]{\includegraphics[width=0.49\linewidth]{../Implementation/DataDescription/delivery_delay.png}}
 	\subfigure[Meal preparation time distribution]{\includegraphics[width=0.49\linewidth]{../Implementation/DataDescription/prep_time.png}}
-	\caption{Spatial and temporal distributions}
+	\caption{Delivery Delay and Preparation Time Distribution}
 	\label{fig:prepdelay}
 \end{figure}
 
@@ -44,7 +44,7 @@ All in all, we conclude the following:
 	\subfigure[For GBDT]{\includegraphics[width=0.49\linewidth]{../Implementation/SampleSize/GBDT_SampleSizes.png}}
 	\subfigure[For Random Forest]{\includegraphics[width=0.49\linewidth]{../Implementation/SampleSize/RF_SampleSizes.png}}
 	\subfigure[For Linear Regression]{\includegraphics[width=0.49\linewidth]{../Implementation/SampleSize/LR_SampleSizes.png}}
-	\caption{MSE for different sample sizes}
+	\caption{MSE for Different Sample Sizes}
 	\label{fig:convergences}
 \end{figure}
 
@@ -77,10 +77,10 @@ Besides the parameters considered for optimization, we set the number of estimat
 The exact optimal parameter configuration for GBDT on both datasets is depicted in figure \ref{fig:GBDT_Optimal}. Training GBDT with the optimal parameter configuration using the full available amount of samples results in a mean squared error of approximately 25.1384 on the raw data, and 27.0852 on the crafted data. Early Stopping does not set in when training GBDT on raw data, whereas it does set in for the crafted data at around 600. 
 \begin{figure}[h]
 	\centering
-	\subfigure[Optimal configurations]{\includegraphics[width=\linewidth]{figures/HPO/GBDT_ResultsTable_HPO_Optimal.pdf}}
-	\subfigure[Training history on crafted data]{\includegraphics[width=0.49\linewidth]{../Implementation/optunaStudies/GBDT_Raw_Optim_Metric.png}}
-	\subfigure[Training history on crafted data]{\includegraphics[width=0.49\linewidth]{../Implementation/optunaStudies/GBDT_Crafted_Optim_Metric.png}}
-	\caption{Optimal configurations and training histories for GBDT}
+	\subfigure[Optimal Configurations]{\includegraphics[width=\linewidth]{figures/HPO/GBDT_ResultsTable_HPO_Optimal.pdf}}
+	\subfigure[Training History on Raw Data]{\includegraphics[width=0.49\linewidth]{../Implementation/optunaStudies/GBDT_Raw_Optim_Metric.png}}
+	\subfigure[Training History on Crafted Data]{\includegraphics[width=0.49\linewidth]{../Implementation/optunaStudies/GBDT_Crafted_Optim_Metric.png}}
+	\caption{Optimal Configurations and Training Histories for GBDT}
 	\label{fig:GBDT_Optimal}
 \end{figure}
 
@@ -136,9 +136,9 @@ Figure \ref{fig:RF_Optimal} depicts the optimal parameter configurations resulti
 \begin{figure}[h]
 	\centering
 	\subfigure[Optimal configurations]{\includegraphics[width=\linewidth]{figures/HPO/RF_ResultsTable_HPO_Optimal.pdf}}
-	\subfigure[Training history on raw data]{\includegraphics[width=0.49\linewidth]{../Implementation/optunaStudies/RF_Raw_Optim_Metric.png}}
-	\subfigure[Training history on crafted data]{\includegraphics[width=0.49\linewidth]{../Implementation/optunaStudies/RF_Crafted_Optim_Metric.png}}
-	\caption{Optimal configurations and training histories for Random Forest}
+	\subfigure[Training History on Raw Data]{\includegraphics[width=0.49\linewidth]{../Implementation/optunaStudies/RF_Raw_Optim_Metric.png}}
+	\subfigure[Training history on Crafted Data]{\includegraphics[width=0.49\linewidth]{../Implementation/optunaStudies/RF_Crafted_Optim_Metric.png}}
+	\caption{Optimal Configurations and Training Histories for Random Forest}
 	\label{fig:RF_Optimal}
 \end{figure}
 
