@@ -177,7 +177,7 @@
   \bigskip\noindent Hiermit erkl\"are ich an Eides statt, dass
   ich die vorliegende Arbeit selbstst\"andig verfasst und keine
   anderen als die angegebenen Hilfsmittel verwendet habe.\par
-  \bigskip\noindent Braunschweig,~\datum\par
+  \bigskip\noindent Salzgitter,~\datum\par
   \vskip 10mm
   \hfill\hrulefill
 }
