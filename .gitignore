@@ -19,12 +19,12 @@ ds_latex/ds_seminar.pdf
 
 # Jupyter Notebook 
 *.cpython-38.pyc
-.ipynb_checkpoints/
+ipynb_checkpoints/
 
-#Folders
+#Misc
 env/
-Implementation/.idea/
-ds_latex/
-# Misc
+Implementation/.ipynb_checkpoints/
+# Now that the thesis is done, ds_latex/ will not be tracked anymore
+ds_latex/ 
 *.~lock.*
-
+*.pt
