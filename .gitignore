@@ -15,16 +15,13 @@
 *.synctex.gz
 *.toc
 *.texput.log
-ds_latex/ds_seminar.pdf
 
 # Jupyter Notebook 
 *.cpython-38.pyc
-ipynb_checkpoints/
 
 #Misc
 env/
 Implementation/.ipynb_checkpoints/
-# Now that the thesis is done, ds_latex/ will not be tracked anymore
 ds_latex/ 
 *.~lock.*
 *.pt
