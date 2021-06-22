@@ -20,7 +20,7 @@
 *.cpython-38.pyc
 
 #Misc
-env/
+venv/
 Implementation/.ipynb_checkpoints/
 ds_latex/ 
 *.~lock.*

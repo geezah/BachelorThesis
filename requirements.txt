@@ -34,7 +34,7 @@ sklearn==0.0
 SQLAlchemy==1.4.18
 stevedore==3.3.0
 threadpoolctl==2.1.0
-torch==1.9.0+cpu
+torch==1.9.0
 tqdm==4.61.1
 typing-extensions==3.10.0.0
 wcwidth==0.2.5
