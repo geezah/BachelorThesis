@@ -1,3 +1,7 @@
+'''
+The author of this file is Florentin D. Hildebrandt (supervisor of this bachelor thesis). 
+Minor changes were applied by me (Emre Gezer).
+'''
 from functools import lru_cache
 
 import numpy as np

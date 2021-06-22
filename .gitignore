@@ -22,8 +22,9 @@ ds_latex/ds_seminar.pdf
 .ipynb_checkpoints/
 
 #Folders
-venv/
+env/
 Implementation/.idea/
+ds_latex/
 # Misc
 *.~lock.*
 
